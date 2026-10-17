@@ -237,6 +237,14 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
       <button class="pb" id="aB" type="submit"></button>
       <div class="lks"><button type="button" class="lk" id="lk1">Tạo tài khoản mới</button><button type="button" class="lk" id="lk2">Quên mật khẩu?</button><button type="button" class="lk" id="lk3" hidden>← Đăng nhập</button></div>
     </form>
+    <form class="pnl" id="fProf" hidden>
+      <h2>Hoàn tất hồ sơ</h2>
+      <p class="inf">Hãy nhập tên và giới tính để bạn bè nhận ra bạn nhé.</p>
+      <input id="pN" placeholder="Tên của bạn" maxlength="30" autocomplete="name">
+      <div class="gd" id="pG"><button type="button" data-g="Nam">Nam</button><button type="button" data-g="Nữ">Nữ</button><button type="button" data-g="Khác">Khác</button></div>
+      <p class="err" id="pE"></p>
+      <button class="pb" type="submit">Tiếp tục</button>
+    </form>
     <form class="pnl" id="fName" hidden>
       <h2>Đặt tên cho mèo nhà bạn</h2>
       <input id="iC" placeholder="Tên mèo" maxlength="20">
@@ -308,7 +316,7 @@ const M={login:['Đăng nhập','Đăng nhập','iE iP'],reg:['Tạo tài khoả
 function mode(m,msg){am=m;for(const i of['iN','iE','iP','iK'])$(i).hidden=!M[m][2].includes(i);
   $('aT').textContent=M[m][0];$('aB').textContent=M[m][1];$('aE').textContent=msg||'';$('aI').textContent='';$('gd').hidden=m!=='reg';
   $('lk1').hidden=$('lk2').hidden=m!=='login';$('lk3').hidden=m==='login';$('iP').autocomplete=m==='reg'?'new-password':'current-password'}
-function form(id){$('pop').hidden=false;$('fAuth').hidden=id!=='a';$('fName').hidden=id!=='n'}
+function form(id){$('pop').hidden=false;$('fAuth').hidden=id!=='a';$('fName').hidden=id!=='n';$('fProf').hidden=id!=='p'}
 function enter(){$('pop').hidden=true;cover(()=>{hideAll();goMain()})}
 $('pop').onclick=e=>{if(e.target.id==='pop')$('pop').hidden=true};
 $('lk1').onclick=()=>mode('reg');$('lk2').onclick=()=>mode('forgot');$('lk3').onclick=()=>mode('login');
@@ -325,7 +333,7 @@ $('fAuth').onsubmit=async e=>{e.preventDefault();
       rec={name:nm,gender,email:em,cat:'',gt:0,money:0,health:100,hunger:100};await PL(u.uid).set({...rec,createdAt:TS()})}
     else{u=(await fa.signInWithEmailAndPassword(em,pw)).user;const s=await PL(u.uid).get();
       if(s.exists)rec=s.data();else{rec={name:u.displayName||em.split('@')[0],gender:'',email:em,cat:'',gt:0,money:0,health:100,hunger:100};await PL(u.uid).set({...rec,createdAt:TS()})}}
-    gt=rec.gt||0;money=rec.money||0;health=rec.health??100;hunger=rec.hunger??100;cH=rec.cH??100;cF=rec.cF??100;cJ=rec.cJ??100;inv=rec.inv||{};st=rec.st||{};acc=st.acc||0;renderHud();social(u);rec.cat?enter():form('n')
+    gt=rec.gt||0;money=rec.money||0;health=rec.health??100;hunger=rec.hunger??100;cH=rec.cH??100;cF=rec.cF??100;cJ=rec.cJ??100;inv=rec.inv||{};st=rec.st||{};acc=st.acc||0;renderHud();social(u);if(!rec.gender){$('pN').value=rec.name||'';pgn='';$('pE').textContent='';document.querySelectorAll('#pG button').forEach(x=>x.classList.remove('on'));form('p')}else rec.cat?enter():form('n')
   }catch(x){E(fe(x))}};
 $('fName').onsubmit=async e=>{e.preventDefault();const n=$('iC').value.trim();
   if(!n){$('cE').textContent='Hãy đặt tên cho mèo';return}rec.cat=n;await save();enter()};
@@ -451,25 +459,27 @@ function startSfx(k){stopSfx();if(!ac)return;const g=ac.createGain(),n=[];g.gain
   else{for(const f of[4300,3800]){const o=ac.createOscillator(),y=ac.createGain();o.frequency.value=f;y.gain.value=.05;o.connect(y);y.connect(g);o.start();n.push(o,y);lf(31+f%7,.045,y.gain);lf(.35,.03,y.gain)}fl(nz(0),'highpass',2500,.7,.02)}
   sfxS={g,n,t};if(gn)gn.gain.value=vm*vs*.35}
 // ---- Bạn bè, nhắn tin, thăm nhà (Firebase)
-let me=null,FR={fr:[],rq:[],out:[],ch:[]},PR={},unsubs=[],fTab='list',fCur=null,fBack='list',fQ='',ALL=null,ftk=0,vUnsub=null,chatUn=null,rcd=null,tm0=null,myThumb='';
+let myAv="",AVC={},me=null,FR={fr:[],rq:[],out:[],ch:[]},PR={},unsubs=[],fTab='list',fCur=null,fBack='list',fQ='',ALL=null,ftk=0,vUnsub=null,chatUn=null,rcd=null,tm0=null,myThumb='';
 const pid=(a,b)=>a<b?a+'_'+b:b+'_'+a,esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const DEF='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><rect width='10' height='10' fill='#efe6cf'/><circle cx='5' cy='3.7' r='1.9' fill='#fff' stroke='#c9b88e' stroke-width='.2'/><path d='M1.6 10a3.4 3.4 0 016.8 0z' fill='#fff' stroke='#c9b88e' stroke-width='.2'/></svg>");
 ['t1','t2','t3','t3d','t4','env','redx','frame'].forEach(k=>document.documentElement.style.setProperty('--'+k,'url(data:image/png;base64,'+A['s_'+k]+')'));
 const dayAt=g=>{const h=((360+g)%1440)/60;return h>=5&&h<18},tmf=t=>{const d=t&&t.toDate?t.toDate():null;return d?p2(d.getHours())+':'+p2(d.getMinutes()):''};
 const rd=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(f)});
-async function shrink(f,max,q){const u=await rd(f),im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u}),k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));c.getContext('2d').drawImage(im,0,0,c.width,c.height);return c.toDataURL('image/jpeg',q)}
+async function shrink(f,max,q){const u=await rd(f),im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u}),k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));const x=c.getContext('2d');x.fillStyle='#efe6cf';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);return c.toDataURL('image/jpeg',q)}
 async function getP(u,force){if(!force&&PR[u]&&Date.now()-PR[u].t<60000)return PR[u].d;try{const s=await fs.doc('cathat_profiles/'+u).get(),d=s.exists?s.data():null;PR[u]={d,t:Date.now()};return d}catch(e){return null}}
 async function pubSync(){if(!me||!rec)return;try{await fs.doc('cathat_profiles/'+me).set({name:rec.name||'',gender:rec.gender||'',cat:rec.cat||'',days:dayCount(),gt:Math.round(gt*100)/100,cH,cF,cJ,at:TS()},{merge:true})}catch(e){console.warn(e)}}
-const hAv=()=>{const e=$('hAv');e.hidden=!myThumb;if(myThumb)e.src=myThumb};
+const hAv=()=>{const e=$('hAv'),s=myAv||myThumb;e.hidden=!s;if(s)e.src=s};
 async function social(u){me=u.uid;unsubs.forEach(f=>f());unsubs=[];const C=c=>fs.collection(c),er=e=>console.warn(e);
   unsubs.push(C('cathat_pairs').where('members','array-contains',me).onSnapshot(s=>{FR.fr=s.docs.map(d=>d.data().members.find(m=>m!==me));fRender()},er));
   unsubs.push(C('cathat_reqs').where('to','==',me).onSnapshot(s=>{FR.rq=s.docs.map(d=>d.data());$('fTabs').children[2].classList.toggle('dot',!!FR.rq.length);fRender()},er));
   unsubs.push(C('cathat_reqs').where('from','==',me).onSnapshot(s=>{FR.out=s.docs.map(d=>d.data().to);fRender()},er));
   unsubs.push(C('cathat_chats').where('members','array-contains',me).onSnapshot(s=>{FR.ch=s.docs.map(d=>({id:d.id,...d.data()}));fRender()},er));
   unsubs.push(C('cathat_feeds').where('to','==',me).onSnapshot(s=>{let n=0;s.docs.forEach(d=>{const x=d.data(),t=x.ts&&x.ts.toMillis();st.fd=st.fd||{};if(t&&t>(st.fd[x.from]||0)){st.fd[x.from]=t;cF=cl(cF+10);n++}});if(n){toast('Có bạn cho mèo ăn! +'+10*n+' độ no');renderHud();save()}},er));
-  const p=await getP(me,1);myThumb=p&&p.thumb||'';hAv();pubSync()}
-const av=p=>`<div class="av"><img class="p" src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>`;
-const row=(u,p,b)=>`<div class="row"><div class="avw" data-a="view" data-u="${u}">${av(p)}</div><div class="rn" data-a="view" data-u="${u}"><b>${esc(p&&p.name||'Người chơi')}</b><small>Day: ${p&&p.days!=null?p.days:0}</small></div>${b}</div>`;
+  const p=await getP(me,1);myThumb=p&&p.thumb||'';
+  if(p&&p.hasAv){const d=await getAv(me,1);if(d){myAv=d;const gif=/^data:image\/gif/.test(d);if(p.hasAv!==(gif?'gif':true)){const th=await mkThumb(d);if(th){myThumb=th;fs.doc('cathat_profiles/'+me).set({thumb:th,hasAv:gif?'gif':true},{merge:true}).catch(()=>{});PR={}}}}}
+  hAv();pubSync()}
+const av=(p,u)=>`<div class="av"><img class="p"${u&&p&&p.hasAv==='gif'?` data-g="${u}"`:''} src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>`;
+const row=(u,p,b)=>`<div class="row"><div class="avw" data-a="view" data-u="${u}">${av(p,u)}</div><div class="rn" data-a="view" data-u="${u}"><b>${esc(p&&p.name||'Người chơi')}</b><small>Day: ${p&&p.days!=null?p.days:0}</small></div>${b}</div>`;
 const prof=(p,self,acts)=>`<div class="pf"><div class="pa"><div class="av big"><img class="p" src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>${self?'<button class="lk2" data-a="chav">thay đổi avata</button>':''}</div><div class="pi"><p><b>Tên:</b> ${esc(p&&p.name)}</p><p><b>Giới tính:</b> ${esc(p&&p.gender||'—')}</p><p><b>Tên mèo:</b> ${esc(p&&p.cat||'—')}</p><p><b>Day:</b> ${p&&p.days!=null?p.days:0}</p><p><b>Mô tả:</b> ${self?'<button class="lk2" data-a="edesc">thay đổi</button>':''}</p><div class="desc" id="dsc">${esc(p&&p.desc||'Chưa có mô tả')}</div>${acts||''}</div></div>`;
 const bub=m=>{const ok=re=>typeof m.data==='string'&&re.test(m.data);let c;
   if(m.kind==='text')c=esc(m.text);else if(m.kind==='img'||m.kind==='gif')c=ok(/^data:image\/(png|jpeg|gif|webp);base64,/)?`<img src="${m.data}" alt="">`:'[ảnh lỗi]';
@@ -480,21 +490,24 @@ async function fRender(force){const fw=$('fr');if(fw.hidden)return;if(fTab==='ch
   const k=++ftk,t=fTab,B=$('fBody');B.classList.toggle('chat',t==='chat');
   document.querySelectorAll('.ft').forEach(b=>b.classList.toggle('on',b.dataset.t===t||(t==='view'&&b.dataset.t===fBack)));
   $('fTitle').textContent={list:'Bạn bè',search:'Tìm kiếm',req:'Lời mời kết bạn',me:'Hồ sơ của bạn',mail:'Tin nhắn',chat:(fCur&&fCur.name)||'Trò chuyện',view:'Hồ sơ',conf:'Xoá bạn'}[t]||'';
-  if(t==='list'){const ps=await Promise.all(FR.fr.map(u=>getP(u)));if(k!==ftk)return;B.innerHTML=FR.fr.map((u,i)=>row(u,ps[i],`<button class="ib mail" data-a="chat" data-u="${u}" aria-label="Nhắn tin"></button><button class="ib del" data-a="conf" data-u="${u}" aria-label="Xoá bạn"></button>`)).join('')||'<p class="emp">Chưa có bạn nào. Vào tab 🔍 để tìm người chơi nhé!</p>'}
+  if(t==='list'){const ps=await Promise.all(FR.fr.map(u=>getP(u)));if(k!==ftk)return;B.innerHTML=FR.fr.map((u,i)=>row(u,ps[i],`<button class="ib mail" data-a="chat" data-u="${u}" aria-label="Nhắn tin"></button><button class="ib del" data-a="conf" data-u="${u}" aria-label="Xoá bạn"></button>`)).join('')||'<p class="emp">Chưa có bạn nào. Vào tab 🔍 để tìm người chơi nhé!</p>';upAv()}
   else if(t==='search'){B.innerHTML=`<div class="sbox"><input id="qIn" placeholder="Nhập tên người chơi..." maxlength="30" value="${esc(fQ)}"></div><div id="qList"></div>`;ALL=null;fSearch(k)}
-  else if(t==='req'){const ps=await Promise.all(FR.rq.map(r=>getP(r.from)));if(k!==ftk)return;B.innerHTML=FR.rq.map((r,i)=>row(r.from,ps[i]||{name:r.fromName},`<button class="ib ok" data-a="acc" data-u="${r.from}" aria-label="Đồng ý">✓</button><button class="ib no" data-a="rej" data-u="${r.from}" aria-label="Xoá lời mời"></button>`)).join('')||'<p class="emp">Không có lời mời nào</p>'}
+  else if(t==='req'){const ps=await Promise.all(FR.rq.map(r=>getP(r.from)));if(k!==ftk)return;B.innerHTML=FR.rq.map((r,i)=>row(r.from,ps[i]||{name:r.fromName},`<button class="ib ok" data-a="acc" data-u="${r.from}" aria-label="Đồng ý">✓</button><button class="ib no" data-a="rej" data-u="${r.from}" aria-label="Xoá lời mời"></button>`)).join('')||'<p class="emp">Không có lời mời nào</p>';upAv()}
   else if(t==='me'||t==='view'){const u=t==='me'?me:fCur.u,p=await getP(u,1);if(k!==ftk)return;const isF=FR.fr.includes(u),sent=FR.out.includes(u),inc=FR.rq.some(r=>r.from===u);
     const acts=u===me?'':isF?'<div class="acts"><button class="pb" data-a="visit">Thăm nhà</button><button class="pb alt" data-a="chat" data-u="'+u+'">Nhắn tin</button></div>':inc?'<p class="tag">Người này đã gửi lời mời cho bạn (xem tab lời mời)</p>':sent?'<p class="tag">Đã gửi lời mời kết bạn</p>':'<div class="acts"><button class="pb" data-a="add">Kết bạn</button></div>';
     B.innerHTML=(t==='view'?'<button class="lk2" data-a="back">← Quay lại</button>':'')+prof(p,u===me,acts);
     fs.doc('cathat_avatars/'+u).get().then(s=>{const i=document.querySelector('#fBody .av.big .p');if(s.exists&&i&&k===ftk)i.src=s.data().data}).catch(()=>{})}
   else if(t==='conf'){const p=await getP(fCur.u);if(k!==ftk)return;B.innerHTML=`<div class="cf"><p>Bạn có chấp nhận xoá <b>${esc(p&&p.name||'')}</b>?</p><button class="pb" data-a="yes">Chấp nhận</button><button class="pb alt" data-a="no">Thôi</button></div>`}
   else if(t==='mail'){const L=[...FR.ch].sort((a,b)=>((b.lastTs&&b.lastTs.toMillis&&b.lastTs.toMillis())||0)-((a.lastTs&&a.lastTs.toMillis&&a.lastTs.toMillis())||0)),us=L.map(c=>c.members.find(m=>m!==me)),ps=await Promise.all(us.map(u=>getP(u)));if(k!==ftk)return;
-    B.innerHTML=L.map((c,i)=>`<div class="row" data-a="chat" data-u="${us[i]}">${av(ps[i])}<div class="rn"><b>${esc(ps[i]&&ps[i].name||'')}</b><small>${c.lastFrom===me?'Bạn: ':''}${esc(c.last||'')}</small></div><small>${tmf(c.lastTs)}</small></div>`).join('')||'<p class="emp">Chưa có tin nhắn nào</p>'}
+    B.innerHTML=L.map((c,i)=>`<div class="row" data-a="chat" data-u="${us[i]}">${av(ps[i],us[i])}<div class="rn"><b>${esc(ps[i]&&ps[i].name||'')}</b><small>${c.lastFrom===me?'Bạn: ':''}${esc(c.last||'')}</small></div><small>${tmf(c.lastTs)}</small></div>`).join('')||'<p class="emp">Chưa có tin nhắn nào</p>';upAv()}
   else if(t==='chat'){B.innerHTML='<div class="msgs" id="msgs"></div><div class="cbar"><button class="cb2" data-a="file" aria-label="Gửi file">+</button><button class="cb2" data-a="img" aria-label="Gửi ảnh">🖼</button><button class="cb2" id="mic" data-a="mic" aria-label="Ghi âm">🎤</button><input id="cIn" placeholder="Aa" maxlength="1000"><button class="cb2" data-a="send" aria-label="Gửi">➤</button></div>';
     chatUn=fs.collection('cathat_chats/'+pid(me,fCur.u)+'/msgs').orderBy('ts').limitToLast(60).onSnapshot(s=>{const M=$('msgs');if(!M)return;M.innerHTML=s.docs.map(d=>bub(d.data())).join('');M.scrollTop=M.scrollHeight},e=>console.warn(e))}}
 async function fSearch(k){if(!ALL){try{const s=await fs.collection('cathat_profiles').orderBy('name').limit(200).get();ALL=s.docs.map(d=>({u:d.id,...d.data()}))}catch(e){ALL=[]}}
   if(fTab!=='search'||!$('qList'))return;const q=fQ.trim().toLowerCase(),L=ALL.filter(p=>p.u!==me&&(!q||(p.name||'').toLowerCase().includes(q)));
-  $('qList').innerHTML=L.map(p=>row(p.u,p,FR.fr.includes(p.u)?'<small class="tag">Bạn bè</small>':FR.out.includes(p.u)?'<small class="tag">Đã gửi</small>':`<button class="ib add" data-a="add" data-u="${p.u}" aria-label="Kết bạn">+</button>`)).join('')||'<p class="emp">Không tìm thấy ai</p>'}
+  $('qList').innerHTML=L.map(p=>row(p.u,p,FR.fr.includes(p.u)?'<small class="tag">Bạn bè</small>':FR.out.includes(p.u)?'<small class="tag">Đã gửi</small>':`<button class="ib add" data-a="add" data-u="${p.u}" aria-label="Kết bạn">+</button>`)).join('')||'<p class="emp">Không tìm thấy ai</p>';upAv()}
+async function getAv(u,force){if(!force&&AVC[u])return AVC[u];try{const s=await fs.doc('cathat_avatars/'+u).get();if(s.exists)return AVC[u]=s.data().data}catch(e){}return null}
+async function upAv(){const L=[...document.querySelectorAll('#fBody img.p[data-g]')].slice(0,12);for(const e of L){const d=await getAv(e.dataset.g);if(d&&e.isConnected)e.src=d}}
+const mkThumb=d=>new Promise(ok=>{const i=new Image();i.onload=()=>{const k=Math.min(1,64/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(i.width*k));c.height=Math.max(1,Math.round(i.height*k));const x=c.getContext('2d');x.fillStyle='#efe6cf';x.fillRect(0,0,c.width,c.height);x.drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.7))};i.onerror=()=>ok('');i.src=d});
 const fOpen=()=>{$('fr').hidden=false;fTab='list';fRender(1)};
 const fClose=()=>{$('fr').hidden=true;if(chatUn){chatUn();chatUn=null}};
 $('avatar').onclick=fOpen;$('fX').onclick=fClose;$('fr').onclick=e=>{if(e.target.id==='fr')fClose()};
@@ -511,7 +524,7 @@ async function mic(){if(rcd){rcd.stop();return}try{const s=await navigator.media
 $('chIn').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||!fCur)return;try{if(f.type==='image/gif'){if(f.size>600000)return toast('GIF quá lớn (tối đa 600 KB)');send('gif',{data:await rd(f)})}else send('img',{data:await shrink(f,900,.7)})}catch(x){toast('Không gửi được ảnh')}};
 $('flIn').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||!fCur)return;if(f.size>600000)return toast('File quá lớn (tối đa 600 KB)');send('file',{data:await rd(f),name:f.name.slice(0,100),size:f.size})};
 $('avIn').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const gif=f.type==='image/gif';if(gif&&f.size>250000)return toast('GIF quá lớn (tối đa 250 KB)');
-  const full=gif?await rd(f):await shrink(f,320,.8),th=await shrink(f,64,.7);await fs.doc('cathat_avatars/'+me).set({data:full,type:gif?'gif':'img'});await fs.doc('cathat_profiles/'+me).set({thumb:th,hasAv:true},{merge:true});myThumb=th;PR={};hAv();toast('Đã đổi avatar');fRender(1)}catch(x){toast('Không đổi được avatar')}};
+  const full=gif?await rd(f):await shrink(f,320,.8),th=await shrink(f,64,.7);await fs.doc('cathat_avatars/'+me).set({data:full,type:gif?'gif':'img'});await fs.doc('cathat_profiles/'+me).set({thumb:th,hasAv:gif?'gif':true},{merge:true});myThumb=th;myAv=full;AVC[me]=full;PR={};hAv();toast('Đã đổi avatar');fRender(1)}catch(x){toast('Không đổi được avatar')}};
 $('fBody').onclick=async e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,u=b.dataset.u;
   if(a==='view')nav('view',{u});else if(a==='chat'){const p=await getP(u);nav('chat',{u,name:p&&p.name||''})}else if(a==='conf')nav('conf',{u});
   else if(a==='yes'){try{await fs.doc('cathat_pairs/'+pid(me,fCur.u)).delete()}catch(x){toast('Không xoá được')}fTab='list';fRender(1)}else if(a==='no'){fTab='list';fRender(1)}
@@ -536,5 +549,11 @@ function renderCat(){const v=visiting,p=v?v.p:null,H=v?(p.cH??100):cH,F=v?(p.cF?
 async function feed(){const v=visiting;if(Date.now()-((st.lf||{})[v.u]||0)<288e5)return;
   try{await fs.doc('cathat_feeds/'+v.u+'_'+me).set({from:me,to:v.u,ts:TS()});st.lf=st.lf||{};st.lf[v.u]=Date.now();v.p.cF=Math.min(100,(v.p.cF??100)+10);renderCat();save();toast('Đã cho mèo '+(v.p.cat||'')+' ăn: +10 độ no')}catch(e){toast('Chưa cho ăn được (cần đủ 8 tiếng và là bạn bè)')}}
 $('cPet').onclick=()=>{if(visiting)return feed();const n=pets();if(n>=3)return;st.petDay=dayCount();st.pets=n+1;cJ=cl(cJ+1);renderCat();save();toast('+1 niềm vui ♥')};
+// ---- Hoàn tất hồ sơ (tài khoản cũ chưa có tên/giới tính)
+let pgn='';
+document.querySelectorAll('#pG button').forEach(b=>b.onclick=()=>{pgn=b.dataset.g;document.querySelectorAll('#pG button').forEach(x=>x.classList.toggle('on',x===b))});
+$('fProf').onsubmit=async e=>{e.preventDefault();const n=$('pN').value.trim(),E=m=>{$('pE').textContent=m};
+  if(!n)return E('Hãy nhập tên');if(!pgn)return E('Hãy chọn giới tính');
+  try{await PL(fa.currentUser.uid).update({name:n,gender:pgn});rec.name=n;rec.gender=pgn;try{await fa.currentUser.updateProfile({displayName:n})}catch(x){}PR={};pubSync();rec.cat?enter():form('n')}catch(x){E(fe(x))}};
 show('menu');song('mus_menu',true);
 </script></body></html>
