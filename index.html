@@ -144,6 +144,12 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 #hAv{left:1.9%;top:22.7%;width:5.2%;height:8.8%;object-fit:cover;pointer-events:none}
 #back{left:58.5%;top:6%;width:9%;height:8%;font-size:1.9cqw;padding:0;display:none}#vBan{left:60%;top:17.5%;width:24%;padding:.5cqw 0;text-align:center;border-radius:99px;background:#2b1f17cc;color:#fff3d6;font:700 1.9cqw 'Baloo 2',system-ui,sans-serif;display:none;pointer-events:none}
 #game.visit #back,#game.visit #vBan{display:block}#game.visit .hit{pointer-events:none}#game.visit #catHit{pointer-events:auto}
+#fBody{touch-action:pan-y;overscroll-behavior:contain}.msgs{touch-action:pan-y}
+.pb.bk{display:block;font-size:1.9cqw;padding:.5cqw 1.8cqw;margin:-.8cqw 0 .8cqw}
+.pa{flex:none;width:17cqw}.pa .acts{flex-direction:column;width:100%;margin:0}.pa .acts .pb{width:100%;padding:.6cqw .8cqw;font-size:1.9cqw}.pa .tag{text-align:center;margin:0}
+.sp{background:#f5f0d7}
+.sbtn{font:700 3cqw 'Baloo 2',system-ui,sans-serif;color:#1f1a2e;background:#f6ecd3;border:0;padding:0;cursor:pointer;pointer-events:auto;white-space:nowrap;box-shadow:0 -.5cqw #1f1a2e,0 .5cqw #1f1a2e,-.5cqw 0 #1f1a2e,.5cqw 0 #1f1a2e,inset 0 -.8cqw #dcb98e,inset 0 .5cqw #fff8e6}
+.sbtn:active{transform:translateY(.4cqw)}
 </style></head><body>
 <div id="app"><div id="stage">
   <video id="v" muted loop playsinline autoplay></video>
@@ -179,8 +185,10 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <input id="rM" type="range" min="0" max="1" step=".05" aria-label="Nhạc" style="top:33.9%">
     <input id="rS" type="range" min="0" max="1" step=".05" aria-label="Âm thanh" style="top:54.5%">
     <b class="vv" id="vM" style="top:33.9%"></b><b class="vv" id="vS" style="top:54.5%"></b>
-    <button class="hit" id="sCre" aria-label="Creator" style="left:30.5%;top:67.6%;width:26.9%;height:16.2%"></button>
-    <button class="hit" id="sOut" aria-label="Thoát" style="left:58.8%;top:67.6%;width:20.1%;height:16.2%"></button>
+    <div class="sp" style="left:29.8%;top:66%;width:50.2%;height:19.5%"></div>
+    <button class="sbtn" id="sLog" style="left:20.8%;top:68%;width:17.2%;height:14.5%">Đăng xuất</button>
+    <button class="sbtn" id="sCre" style="left:39.2%;top:68%;width:19.4%;height:14.5%">Creator</button>
+    <button class="sbtn" id="sOut" style="left:59.6%;top:68%;width:19.4%;height:14.5%">Thoát</button>
   </div></div>
   <div id="cre" class="ui" hidden style="background:#f3dfc2"><div class="sb"><img id="cpic" alt="">
     <span class="vv" style="left:43.1%;top:75.8%;font:700 4.7cqw 'Barlow Condensed',sans-serif;color:#1d1a2a">ra menu</span>
@@ -230,7 +238,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
       <h2 id="aT"></h2>
       <input id="iN" placeholder="Tên của bạn" maxlength="30" autocomplete="name">
       <div id="gd" class="gd" hidden><button type="button" data-g="Nam">Nam</button><button type="button" data-g="Nữ">Nữ</button><button type="button" data-g="Khác">Khác</button></div>
-      <input id="iE" type="email" placeholder="Gmail" autocomplete="email">
+      <input id="iE" type="text" inputmode="email" placeholder="Gmail hoặc tên của bạn" autocomplete="username" autocapitalize="off" autocorrect="off">
       <input id="iK" placeholder="Mã 5 số" inputmode="numeric" maxlength="5" autocomplete="one-time-code" hidden>
       <input id="iP" type="password" placeholder="Mật khẩu (từ 6 ký tự)">
       <p class="inf" id="aI"></p><p class="err" id="aE"></p>
@@ -314,15 +322,16 @@ async function save(){const u=fa.currentUser;if(!rec||!u)return;rec.gt=Math.roun
   try{await PL(u.uid).update({gt:rec.gt,money,health,hunger,cat:rec.cat||'',cH,cF,cJ,inv,st});pubSync()}catch(e){lastSig='';console.warn(e)}}
 const M={login:['Đăng nhập','Đăng nhập','iE iP'],reg:['Tạo tài khoản mới','Đăng ký','iN iE iP'],forgot:['Quên mật khẩu','Gửi email đặt lại','iE']};
 function mode(m,msg){am=m;for(const i of['iN','iE','iP','iK'])$(i).hidden=!M[m][2].includes(i);
-  $('aT').textContent=M[m][0];$('aB').textContent=M[m][1];$('aE').textContent=msg||'';$('aI').textContent='';$('gd').hidden=m!=='reg';
+  $('iE').placeholder=m==='login'?'Gmail hoặc tên của bạn':'Gmail';$('aT').textContent=M[m][0];$('aB').textContent=M[m][1];$('aE').textContent=msg||'';$('aI').textContent='';$('gd').hidden=m!=='reg';
   $('lk1').hidden=$('lk2').hidden=m!=='login';$('lk3').hidden=m==='login';$('iP').autocomplete=m==='reg'?'new-password':'current-password'}
 function form(id){$('pop').hidden=false;$('fAuth').hidden=id!=='a';$('fName').hidden=id!=='n';$('fProf').hidden=id!=='p'}
 function enter(){$('pop').hidden=true;cover(()=>{hideAll();goMain()})}
 $('pop').onclick=e=>{if(e.target.id==='pop')$('pop').hidden=true};
 $('lk1').onclick=()=>mode('reg');$('lk2').onclick=()=>mode('forgot');$('lk3').onclick=()=>mode('login');
-$('start').onclick=()=>{if(busy)return;$('iP').value='';mode('login');form('a')};
+$('start').onclick=async()=>{if(busy||resuming)return;await authReady;const u=fa.currentUser;if(u){resuming=true;await resumeLogin(u);resuming=false;return}$('iP').value='';mode('login');form('a')};
 $('fAuth').onsubmit=async e=>{e.preventDefault();
-  const em=$('iE').value.trim().toLowerCase(),pw=$('iP').value,nm=$('iN').value.trim(),E=m=>{$('aE').textContent=m};E('');$('aI').textContent='';
+  let em=$('iE').value.trim().toLowerCase();const pw=$('iP').value,nm=$('iN').value.trim(),E=m=>{$('aE').textContent=m};E('');$('aI').textContent='';
+  if(am==='login'&&!em.includes('@')){const mp=JSON.parse(localStorage.getItem('cathat_names')||'{}');em=mp[em]||'';if(!em)return E('Máy này chưa biết tên đó, hãy nhập gmail một lần nhé')}
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return E('Gmail chưa đúng');
   try{
     if(am==='forgot'){await fa.sendPasswordResetEmail(em);$('aI').textContent='Nếu Gmail đã đăng ký, bạn sẽ nhận email đặt lại mật khẩu trong ít phút (xem cả mục Spam).';return}
@@ -333,6 +342,7 @@ $('fAuth').onsubmit=async e=>{e.preventDefault();
       rec={name:nm,gender,email:em,cat:'',gt:0,money:0,health:100,hunger:100};await PL(u.uid).set({...rec,createdAt:TS()})}
     else{u=(await fa.signInWithEmailAndPassword(em,pw)).user;const s=await PL(u.uid).get();
       if(s.exists)rec=s.data();else{rec={name:u.displayName||em.split('@')[0],gender:'',email:em,cat:'',gt:0,money:0,health:100,hunger:100};await PL(u.uid).set({...rec,createdAt:TS()})}}
+    try{const mp=JSON.parse(localStorage.getItem('cathat_names')||'{}');mp[(rec.name||'').toLowerCase()]=em;localStorage.setItem('cathat_names',JSON.stringify(mp))}catch(x){}
     gt=rec.gt||0;money=rec.money||0;health=rec.health??100;hunger=rec.hunger??100;cH=rec.cH??100;cF=rec.cF??100;cJ=rec.cJ??100;inv=rec.inv||{};st=rec.st||{};acc=st.acc||0;renderHud();social(u);if(!rec.gender){$('pN').value=rec.name||'';pgn='';$('pE').textContent='';document.querySelectorAll('#pG button').forEach(x=>x.classList.remove('on'));form('p')}else rec.cat?enter():form('n')
   }catch(x){E(fe(x))}};
 $('fName').onsubmit=async e=>{e.preventDefault();const n=$('iC').value.trim();
@@ -476,11 +486,11 @@ async function social(u){me=u.uid;unsubs.forEach(f=>f());unsubs=[];const C=c=>fs
   unsubs.push(C('cathat_chats').where('members','array-contains',me).onSnapshot(s=>{FR.ch=s.docs.map(d=>({id:d.id,...d.data()}));fRender()},er));
   unsubs.push(C('cathat_feeds').where('to','==',me).onSnapshot(s=>{let n=0;s.docs.forEach(d=>{const x=d.data(),t=x.ts&&x.ts.toMillis();st.fd=st.fd||{};if(t&&t>(st.fd[x.from]||0)){st.fd[x.from]=t;cF=cl(cF+10);n++}});if(n){toast('Có bạn cho mèo ăn! +'+10*n+' độ no');renderHud();save()}},er));
   const p=await getP(me,1);myThumb=p&&p.thumb||'';
-  if(p&&p.hasAv){const d=await getAv(me,1);if(d){myAv=d;const gif=/^data:image\/gif/.test(d);if(p.hasAv!==(gif?'gif':true)){const th=await mkThumb(d);if(th){myThumb=th;fs.doc('cathat_profiles/'+me).set({thumb:th,hasAv:gif?'gif':true},{merge:true}).catch(()=>{});PR={}}}}}
+  {const d=await getAv(me,1);if(d){myAv=d;const gif=/^data:image\/gif/.test(d);if(!p||p.hasAv!==(gif?'gif':true)){const th=await mkThumb(d);if(th){myThumb=th;fs.doc('cathat_profiles/'+me).set({thumb:th,hasAv:gif?'gif':true},{merge:true}).catch(()=>{});PR={}}}}}
   hAv();pubSync()}
-const av=(p,u)=>`<div class="av"><img class="p"${u&&p&&p.hasAv==='gif'?` data-g="${u}"`:''} src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>`;
+const av=(p,u)=>`<div class="av"><img class="p"${u&&p&&p.hasAv?` data-g="${u}"`:''} src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>`;
 const row=(u,p,b)=>`<div class="row"><div class="avw" data-a="view" data-u="${u}">${av(p,u)}</div><div class="rn" data-a="view" data-u="${u}"><b>${esc(p&&p.name||'Người chơi')}</b><small>Day: ${p&&p.days!=null?p.days:0}</small></div>${b}</div>`;
-const prof=(p,self,acts)=>`<div class="pf"><div class="pa"><div class="av big"><img class="p" src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>${self?'<button class="lk2" data-a="chav">thay đổi avata</button>':''}</div><div class="pi"><p><b>Tên:</b> ${esc(p&&p.name)}</p><p><b>Giới tính:</b> ${esc(p&&p.gender||'—')}</p><p><b>Tên mèo:</b> ${esc(p&&p.cat||'—')}</p><p><b>Day:</b> ${p&&p.days!=null?p.days:0}</p><p><b>Mô tả:</b> ${self?'<button class="lk2" data-a="edesc">thay đổi</button>':''}</p><div class="desc" id="dsc">${esc(p&&p.desc||'Chưa có mô tả')}</div>${acts||''}</div></div>`;
+const prof=(p,self,acts)=>`<div class="pf"><div class="pa"><div class="av big"><img class="p" src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>${self?'<button class="lk2" data-a="chav">thay đổi avata</button>':''}${acts||''}</div><div class="pi"><p><b>Tên:</b> ${esc(p&&p.name)}</p><p><b>Giới tính:</b> ${esc(p&&p.gender||'—')}</p><p><b>Tên mèo:</b> ${esc(p&&p.cat||'—')}</p><p><b>Day:</b> ${p&&p.days!=null?p.days:0}</p><p><b>Mô tả:</b> ${self?'<button class="lk2" data-a="edesc">thay đổi</button>':''}</p><div class="desc" id="dsc">${esc(p&&p.desc||'Chưa có mô tả')}</div></div></div>`;
 const bub=m=>{const ok=re=>typeof m.data==='string'&&re.test(m.data);let c;
   if(m.kind==='text')c=esc(m.text);else if(m.kind==='img'||m.kind==='gif')c=ok(/^data:image\/(png|jpeg|gif|webp);base64,/)?`<img src="${m.data}" alt="">`:'[ảnh lỗi]';
   else if(m.kind==='voice')c=ok(/^data:audio\//)?`<audio controls src="${m.data}"></audio>`:'[ghi âm lỗi]';
@@ -495,7 +505,7 @@ async function fRender(force){const fw=$('fr');if(fw.hidden)return;if(fTab==='ch
   else if(t==='req'){const ps=await Promise.all(FR.rq.map(r=>getP(r.from)));if(k!==ftk)return;B.innerHTML=FR.rq.map((r,i)=>row(r.from,ps[i]||{name:r.fromName},`<button class="ib ok" data-a="acc" data-u="${r.from}" aria-label="Đồng ý">✓</button><button class="ib no" data-a="rej" data-u="${r.from}" aria-label="Xoá lời mời"></button>`)).join('')||'<p class="emp">Không có lời mời nào</p>';upAv()}
   else if(t==='me'||t==='view'){const u=t==='me'?me:fCur.u,p=await getP(u,1);if(k!==ftk)return;const isF=FR.fr.includes(u),sent=FR.out.includes(u),inc=FR.rq.some(r=>r.from===u);
     const acts=u===me?'':isF?'<div class="acts"><button class="pb" data-a="visit">Thăm nhà</button><button class="pb alt" data-a="chat" data-u="'+u+'">Nhắn tin</button></div>':inc?'<p class="tag">Người này đã gửi lời mời cho bạn (xem tab lời mời)</p>':sent?'<p class="tag">Đã gửi lời mời kết bạn</p>':'<div class="acts"><button class="pb" data-a="add">Kết bạn</button></div>';
-    B.innerHTML=(t==='view'?'<button class="lk2" data-a="back">← Quay lại</button>':'')+prof(p,u===me,acts);
+    B.innerHTML=(t==='view'?'<button class="pb bk" data-a="back">← Quay lại</button>':'')+prof(p,u===me,acts);
     fs.doc('cathat_avatars/'+u).get().then(s=>{const i=document.querySelector('#fBody .av.big .p');if(s.exists&&i&&k===ftk)i.src=s.data().data}).catch(()=>{})}
   else if(t==='conf'){const p=await getP(fCur.u);if(k!==ftk)return;B.innerHTML=`<div class="cf"><p>Bạn có chấp nhận xoá <b>${esc(p&&p.name||'')}</b>?</p><button class="pb" data-a="yes">Chấp nhận</button><button class="pb alt" data-a="no">Thôi</button></div>`}
   else if(t==='mail'){const L=[...FR.ch].sort((a,b)=>((b.lastTs&&b.lastTs.toMillis&&b.lastTs.toMillis())||0)-((a.lastTs&&a.lastTs.toMillis&&a.lastTs.toMillis())||0)),us=L.map(c=>c.members.find(m=>m!==me)),ps=await Promise.all(us.map(u=>getP(u)));if(k!==ftk)return;
@@ -554,6 +564,16 @@ let pgn='';
 document.querySelectorAll('#pG button').forEach(b=>b.onclick=()=>{pgn=b.dataset.g;document.querySelectorAll('#pG button').forEach(x=>x.classList.toggle('on',x===b))});
 $('fProf').onsubmit=async e=>{e.preventDefault();const n=$('pN').value.trim(),E=m=>{$('pE').textContent=m};
   if(!n)return E('Hãy nhập tên');if(!pgn)return E('Hãy chọn giới tính');
-  try{await PL(fa.currentUser.uid).update({name:n,gender:pgn});rec.name=n;rec.gender=pgn;try{await fa.currentUser.updateProfile({displayName:n})}catch(x){}PR={};pubSync();rec.cat?enter():form('n')}catch(x){E(fe(x))}};
+  try{await PL(fa.currentUser.uid).update({name:n,gender:pgn});rec.name=n;rec.gender=pgn;try{const mp=JSON.parse(localStorage.getItem('cathat_names')||'{}');mp[n.toLowerCase()]=rec.email||fa.currentUser.email;localStorage.setItem('cathat_names',JSON.stringify(mp))}catch(x){}try{await fa.currentUser.updateProfile({displayName:n})}catch(x){}PR={};pubSync();rec.cat?enter():form('n')}catch(x){E(fe(x))}};
+// ---- Tự đăng nhập lại + đăng xuất (dữ liệu vẫn nằm trên tài khoản)
+let resuming=false;const authReady=new Promise(ok=>{const un=fa.onAuthStateChanged(()=>{un();ok()})});
+async function resumeLogin(u){try{const s=await PL(u.uid).get();if(s.exists)rec=s.data();else{rec={name:u.displayName||(u.email||'').split('@')[0],gender:'',email:(u.email||'').toLowerCase(),cat:'',gt:0,money:0,health:100,hunger:100};await PL(u.uid).set({...rec,createdAt:TS()})}
+  try{const mp=JSON.parse(localStorage.getItem('cathat_names')||'{}');mp[(rec.name||'').toLowerCase()]=rec.email||(u.email||'').toLowerCase();localStorage.setItem('cathat_names',JSON.stringify(mp))}catch(x){}
+  gt=rec.gt||0;money=rec.money||0;health=rec.health??100;hunger=rec.hunger??100;cH=rec.cH??100;cF=rec.cF??100;cJ=rec.cJ??100;inv=rec.inv||{};st=rec.st||{};acc=st.acc||0;lastSig='';renderHud();social(u);
+  if(!rec.gender){$('pN').value=rec.name||'';pgn='';$('pE').textContent='';document.querySelectorAll('#pG button').forEach(x=>x.classList.remove('on'));form('p')}else rec.cat?enter():form('n')}
+  catch(x){mode('login',fe(x));form('a')}}
+async function logout(){await save();try{await fa.signOut()}catch(e){}unsubs.forEach(f=>f());unsubs=[];if(chatUn){chatUn();chatUn=null}vUnsub&&vUnsub();vUnsub=null;fClose();
+  me=null;rec=null;visiting=null;myThumb='';myAv='';AVC={};PR={};lastSig='';gt=0;money=0;health=100;hunger=100;cH=100;cF=100;cJ=100;inv={};st={};acc=0;$('hAv').hidden=true;$('game').classList.remove('visit');renderHud();toMenu()}
+$('sLog').onclick=()=>cover(logout);
 show('menu');song('mus_menu',true);
 </script></body></html>
