@@ -150,6 +150,11 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 .sp{background:#f5f0d7}
 .sbtn{font:700 3cqw 'Baloo 2',system-ui,sans-serif;color:#1f1a2e;background:#f6ecd3;border:0;padding:0;cursor:pointer;pointer-events:auto;white-space:nowrap;box-shadow:0 -.5cqw #1f1a2e,0 .5cqw #1f1a2e,-.5cqw 0 #1f1a2e,.5cqw 0 #1f1a2e,inset 0 -.8cqw #dcb98e,inset 0 .5cqw #fff8e6}
 .sbtn:active{transform:translateY(.4cqw)}
+#fBody{touch-action:auto;overscroll-behavior:auto;-webkit-overflow-scrolling:touch}
+#fBody.chat{display:grid;grid-template-rows:minmax(0,1fr) auto;overflow:hidden;padding:0}
+.msgs{display:block;overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:auto;min-height:0;padding:1.4cqw;background:#e4efd4}
+.m{display:block;width:fit-content;margin:0 0 .9cqw}.m.me{margin-left:auto}
+.msgs>.lk2{display:block;margin:0 auto 1cqw}
 </style></head><body>
 <div id="app"><div id="stage">
   <video id="v" muted loop playsinline autoplay></video>
@@ -511,13 +516,25 @@ async function fRender(force){const fw=$('fr');if(fw.hidden)return;if(fTab==='ch
   else if(t==='mail'){const L=[...FR.ch].sort((a,b)=>((b.lastTs&&b.lastTs.toMillis&&b.lastTs.toMillis())||0)-((a.lastTs&&a.lastTs.toMillis&&a.lastTs.toMillis())||0)),us=L.map(c=>c.members.find(m=>m!==me)),ps=await Promise.all(us.map(u=>getP(u)));if(k!==ftk)return;
     B.innerHTML=L.map((c,i)=>`<div class="row" data-a="chat" data-u="${us[i]}">${av(ps[i],us[i])}<div class="rn"><b>${esc(ps[i]&&ps[i].name||'')}</b><small>${c.lastFrom===me?'Bạn: ':''}${esc(c.last||'')}</small></div><small>${tmf(c.lastTs)}</small></div>`).join('')||'<p class="emp">Chưa có tin nhắn nào</p>';upAv()}
   else if(t==='chat'){B.innerHTML='<div class="msgs" id="msgs"></div><div class="cbar"><button class="cb2" data-a="file" aria-label="Gửi file">+</button><button class="cb2" data-a="img" aria-label="Gửi ảnh">🖼</button><button class="cb2" id="mic" data-a="mic" aria-label="Ghi âm">🎤</button><input id="cIn" placeholder="Aa" maxlength="1000"><button class="cb2" data-a="send" aria-label="Gửi">➤</button></div>';
-    chatUn=fs.collection('cathat_chats/'+pid(me,fCur.u)+'/msgs').orderBy('ts').limitToLast(60).onSnapshot(s=>{const M=$('msgs');if(!M)return;M.innerHTML=s.docs.map(d=>bub(d.data())).join('');M.scrollTop=M.scrollHeight},e=>console.warn(e))}}
+    chatLim=60;chatSub(false);fixScroll($('msgs'))}}
+let chatLim=60;
+function chatSub(more){chatUn&&chatUn();let first=true;
+  chatUn=fs.collection('cathat_chats/'+pid(me,fCur.u)+'/msgs').orderBy('ts').limitToLast(chatLim).onSnapshot(s=>{const M=$('msgs');if(!M)return;
+    const h=M.scrollHeight,sc=M.scrollTop,nb=h-sc-M.clientHeight<80;
+    M.innerHTML=(s.docs.length>=chatLim?'<button class="lk2" data-a="older">Xem tin cũ hơn</button>':'')+s.docs.map(d=>bub(d.data())).join('');
+    if(first&&!more)M.scrollTop=M.scrollHeight;else if(first&&more)M.scrollTop=M.scrollHeight-h+sc;else if(nb)M.scrollTop=M.scrollHeight;else M.scrollTop=sc;
+    first=false},e=>console.warn(e))}
+function fixScroll(el){if(!el||el._fx)return;el._fx=1;let y0=0,s0=0,man=false;
+  el.addEventListener('touchstart',e=>{y0=e.touches[0].clientY;s0=el.scrollTop;man=false},{passive:true});
+  el.addEventListener('touchmove',e=>{const d=y0-e.touches[0].clientY;if(Math.abs(d)<8)return;if(man){el.scrollTop=s0+d;return}
+    requestAnimationFrame(()=>{if(el.scrollTop===s0&&el.scrollHeight>el.clientHeight)man=true})},{passive:true})}
 async function fSearch(k){if(!ALL){try{const s=await fs.collection('cathat_profiles').orderBy('name').limit(200).get();ALL=s.docs.map(d=>({u:d.id,...d.data()}))}catch(e){ALL=[]}}
   if(fTab!=='search'||!$('qList'))return;const q=fQ.trim().toLowerCase(),L=ALL.filter(p=>p.u!==me&&(!q||(p.name||'').toLowerCase().includes(q)));
   $('qList').innerHTML=L.map(p=>row(p.u,p,FR.fr.includes(p.u)?'<small class="tag">Bạn bè</small>':FR.out.includes(p.u)?'<small class="tag">Đã gửi</small>':`<button class="ib add" data-a="add" data-u="${p.u}" aria-label="Kết bạn">+</button>`)).join('')||'<p class="emp">Không tìm thấy ai</p>';upAv()}
 async function getAv(u,force){if(!force&&AVC[u])return AVC[u];try{const s=await fs.doc('cathat_avatars/'+u).get();if(s.exists)return AVC[u]=s.data().data}catch(e){}return null}
 async function upAv(){const L=[...document.querySelectorAll('#fBody img.p[data-g]')].slice(0,12);for(const e of L){const d=await getAv(e.dataset.g);if(d&&e.isConnected)e.src=d}}
 const mkThumb=d=>new Promise(ok=>{const i=new Image();i.onload=()=>{const k=Math.min(1,64/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(i.width*k));c.height=Math.max(1,Math.round(i.height*k));const x=c.getContext('2d');x.fillStyle='#efe6cf';x.fillRect(0,0,c.width,c.height);x.drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.7))};i.onerror=()=>ok('');i.src=d});
+fixScroll($('fBody'));
 const fOpen=()=>{$('fr').hidden=false;fTab='list';fRender(1)};
 const fClose=()=>{$('fr').hidden=true;if(chatUn){chatUn();chatUn=null}};
 $('avatar').onclick=fOpen;$('fX').onclick=fClose;$('fr').onclick=e=>{if(e.target.id==='fr')fClose()};
@@ -544,7 +561,7 @@ $('fBody').onclick=async e=>{const b=e.target.closest('[data-a]');if(!b)return;c
   else if(a==='visit')visit(fCur.u);else if(a==='back'){fTab=fBack||'list';fRender(1)}else if(a==='chav')$('avIn').click();
   else if(a==='edesc'){const p=await getP(me);$('dsc').outerHTML='<textarea id="dIn" maxlength="300">'+esc(p&&p.desc||'')+'</textarea><div class="acts"><button class="pb" data-a="sdesc">Lưu</button></div>'}
   else if(a==='sdesc'){try{await fs.doc('cathat_profiles/'+me).set({desc:$('dIn').value.trim().slice(0,300)},{merge:true});PR={};toast('Đã lưu mô tả')}catch(x){toast('Không lưu được')}fRender(1)}
-  else if(a==='file')$('flIn').click();else if(a==='img')$('chIn').click();else if(a==='mic')mic();else if(a==='send')sendT()};
+  else if(a==='older'){chatLim+=60;chatSub(true)}else if(a==='file')$('flIn').click();else if(a==='img')$('chIn').click();else if(a==='mic')mic();else if(a==='send')sendT()};
 // ---- Thăm nhà bạn: thời gian theo bạn, mèo bạn, cho ăn +10 (8 tiếng/lần)
 async function visit(u){const p=await getP(u,1);if(!p)return toast('Không vào được nhà bạn');fClose();
   cover(()=>{visiting={u,p:{...p}};hideAll();state='game';$('game').hidden=false;$('game').classList.add('visit');$('vBan').textContent='Nhà của '+(p.name||'bạn');
