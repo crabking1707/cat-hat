@@ -155,6 +155,14 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 .msgs{display:block;overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:auto;min-height:0;padding:1.4cqw;background:#e4efd4}
 .m{display:block;width:fit-content;margin:0 0 .9cqw}.m.me{margin-left:auto}
 .msgs>.lk2{display:block;margin:0 auto 1cqw}
+.cb>#cCol{inset:auto;pointer-events:none;image-rendering:pixelated}
+.uid{font-size:1.9cqw;font-weight:700;color:#6b5a3a;margin-top:.4cqw;text-align:center}
+#slp{inset:0;z-index:4;pointer-events:auto}
+#slp .band{position:absolute;left:0;right:0;top:36%;height:24%;background:linear-gradient(transparent,#fffffff2 18%,#fffffff2 82%,transparent);display:flex;align-items:center;justify-content:center;gap:9cqw;font-family:'Baloo 2',system-ui,sans-serif;color:#2b1f17}
+#slp .band b{font-size:9cqw;line-height:1;min-width:10cqw;text-align:center}
+#slp .sa{background:none;border:0;font:700 8cqw/1 'Baloo 2',system-ui,sans-serif;color:#2b1f17;cursor:pointer;padding:1cqw 3cqw}
+#slp small{position:absolute;left:0;right:0;bottom:9%;text-align:center;font-size:2.2cqw;font-weight:700;color:#5a3a1c}
+#slp .sbt{position:absolute;top:66%;width:18%;font-size:3.4cqw}#sGo:disabled{filter:grayscale(.7);opacity:.7;cursor:default}
 </style></head><body>
 <div id="app"><div id="stage">
   <video id="v" muted loop playsinline autoplay></video>
@@ -174,10 +182,10 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <button class="hit" id="gear" aria-label="Cài đặt" style="left:92.5%;top:.8%;width:7.2%;height:13%"></button>
     <button class="hit" id="work" aria-label="Làm" style="left:90.8%;top:15%;width:9.2%;height:17%"></button>
     <button class="hit" id="catHit" aria-label="Mèo"></button>
-    <button class="hit" id="fridge" aria-label="Tủ lạnh" style="left:79.3%;top:82%;width:7.7%;height:13.7%"></button>
+    <button class="hit" id="sleep" aria-label="Ngủ" style="left:79.3%;top:82%;width:7.7%;height:13.7%"></button>
     <button class="hit" id="bagBtn" aria-label="Túi đồ" style="left:1%;top:72.3%;width:6.6%;height:12.9%"></button>
     <button class="hit" id="avatar" aria-label="Bạn bè" style="left:1.2%;top:21.5%;width:6.8%;height:11.2%"></button>
-    <button class="hit" id="bed" aria-label="Phòng ngủ" style="left:68.8%;top:80.5%;width:9.9%;height:12.2%"></button>
+    
     <img id="hAv" alt="" hidden><button class="pb" id="back">Trở về</button><div id="vBan"></div>
     <button class="hit" id="shop" aria-label="Cửa hàng" style="left:86.8%;top:75.5%;width:11.6%;height:20%"></button>
   </div>
@@ -200,7 +208,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <button class="hit" id="cOut" aria-label="Ra menu" style="left:30.7%;top:67.6%;width:27.4%;height:16.5%"></button>
     <button class="hit" id="cBack" aria-label="Thoát" style="left:59.5%;top:67.6%;width:20.4%;height:16.5%"></button>
   </div></div>
-  <div id="cat" class="ui" hidden style="background:#e9d6b0"><div class="cb"><img id="cimg" alt="">
+  <div id="cat" class="ui" hidden style="background:#e9d6b0"><div class="cb"><img id="cimg" alt=""><img id="cCol" alt="" hidden>
     <div class="bar" style="left:46.4%;top:16.5%;width:45.9%;height:11.5%"><i id="cHc"></i></div>
     <div class="bar" style="left:46.9%;top:43%;width:45.1%;height:11.9%"><i id="cFc" class="f"></i></div>
     <div class="bar" style="left:45.9%;top:69.4%;width:46.1%;height:12%"><i id="cJc" class="j"></i></div>
@@ -232,6 +240,8 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <div id="fTabs"><button class="ft" data-t="list" style="top:15%" aria-label="Bạn bè"></button><button class="ft" data-t="search" style="top:32%" aria-label="Tìm kiếm"></button><button class="ft" data-t="req" style="top:49%" aria-label="Lời mời"></button><button class="ft" data-t="me" style="top:66%" aria-label="Hồ sơ"></button></div>
     <div id="fBody"></div></div>
     <input type="file" id="avIn" accept="image/*" hidden><input type="file" id="chIn" accept="image/*" hidden><input type="file" id="flIn" hidden></div>
+  <div id="slp" hidden><div class="band"><button class="sa" id="sMin" aria-label="Giảm">&lt;</button><b id="sNum">0</b><button class="sa" id="sPlus" aria-label="Tăng">&gt;</button><small id="sInfo"></small></div>
+  <button class="pb sbt" id="sGo" style="left:24%">Ngủ</button><button class="pb sbt alt" id="sNo" style="left:58%">Thôi</button></div>
   <div id="toast" hidden></div>
   <div id="wk" hidden><div class="pnl"><h2>Chọn công việc</h2>
     <button class="pb job" data-j="0"><span>Đi ship hàng</span><small>3 tiếng · +85$ · −15 🍖</small></button>
@@ -308,7 +318,7 @@ function applyVol(){const x=vm*vs;gn?gn.gain.value=x:au.volume=x;$('vM').textCon
 $('rM').oninput=e=>{vm=+e.target.value;applyVol()};$('rS').oninput=e=>{vs=+e.target.value;applyVol()};applyVol();
 // ---- Cài đặt / creator
 const inG=()=>['game','day','work','cat','shp'].includes(state)||(['set','cre'].includes(state)&&from==='game');
-const hideAll=()=>['menu','game','day','set','cre','cat','shp','bag'].forEach(i=>$(i).hidden=true);
+const hideAll=()=>['menu','game','day','set','cre','cat','shp','bag','slp'].forEach(i=>$(i).hidden=true);
 const openSet=f=>cover(()=>{from=f;state='set';hideAll();$('set').hidden=false});
 function toMenu(){save();state='menu';hideAll();$('menu').hidden=false;show('menu');song('mus_menu',true)}
 $('mset').onclick=()=>openSet('menu');$('gear').onclick=()=>openSet('game');
@@ -388,7 +398,7 @@ renderHud();
 // ---- Mèo, shop, vật phẩm
 const CB={sang1:[3,51,10,17],sang2:[44,70,11,16],sang3:[63,41,11,16],toi1:[45,82,11,16],toi2:[28,51,10,16],toi3:[1,70,12,18]};
 function placeCat(k){const b=CB[k],s=$('catHit').style;s.left=b[0]+'%';s.top=b[1]+'%';s.width=b[2]+'%';s.height=b[3]+'%'}
-function advance(h){for(let i=0;i<h;i++){if(hunger===0)health=Math.max(0,health-1);cF=Math.max(0,cF-2);if(cF===0)cH=Math.max(0,cH-4);cJ=Math.max(0,cJ-(cF===0?2:cF<40?1:0));gt+=60}}
+function advance(h,sl){for(let i=0;i<h;i++){if(sl)hunger=Math.min(100,hunger+12);if(hunger===0)health=Math.max(0,health-1);cF=Math.max(0,cF-2);if(cF===0)cH=Math.max(0,cH-4);cJ=Math.max(0,cJ-(cF===0?2:cF<40?1:0));gt+=60}}
 const ic=k=>'data:image/png;base64,'+A[k];
 const toast=m=>{const e=$('toast');e.textContent=m;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,1800)};
 $('cimg').src='data:image/jpeg;base64,'+A.catbg;$('simg').src='data:image/jpeg;base64,'+A.shopbg;
@@ -408,7 +418,14 @@ const ITEMS=[
  {id:'food',n:'Thức ăn mèo',p:10,t:['cat','food'],tag:'Cho mèo · Đồ ăn',img:'i_food',d:'Giúp mèo của bạn khỏe mạnh và vui vẻ hơn!',e:['+6 độ no','+1 sức khoẻ','+1 niềm vui']},
  {id:'brush',n:'Lược chải lông',p:120,t:['cat','item'],tag:'Cho mèo · Vật phẩm',img:'i_brush',d:'Chải nhẹ tay, bộ lông mượt và bé mèo gừ gừ thích thú.',e:['+3 niềm vui mỗi lần dùng','Độ bền 10 lần dùng','Chỉ sở hữu 1 cái'],one:1},
  {id:'yarn',n:'Bóng len',p:75,t:['cat','toy','item'],tag:'Cho mèo · Đồ chơi',img:'i_yarn',d:'Lăn đi lăn lại cả ngày, mèo chơi mãi không chán.',e:['+12 niềm vui, +2 sức khoẻ trong 1 ngày','Dùng 1 lần mỗi ngày, hồi lại lúc 00:00']},
- {id:'prem',n:'Thức ăn mèo cao cấp',p:25,t:['cat','food'],tag:'Cho mèo · Đồ ăn',img:'i_prem',d:'Hạt cao cấp thơm ngon, bé mèo ăn là liếm sạch bát.',e:['+8 độ no','+3 sức khoẻ','+2 niềm vui']}];
+ {id:'prem',n:'Thức ăn mèo cao cấp',p:25,t:['cat','food'],tag:'Cho mèo · Đồ ăn',img:'i_prem',d:'Hạt cao cấp thơm ngon, bé mèo ăn là liếm sạch bát.',e:['+8 độ no','+3 sức khoẻ','+2 niềm vui']},
+ {id:'dumb',n:'Tạ nhẹ',p:120,t:['item'],tag:'Cho người · Vật phẩm',img:'i_dumb',d:'Nhấc lên đặt xuống vài cái là người khoẻ hẳn ra.',e:['+5 độ no','+2 sức khoẻ','Độ bền 3 lần dùng','Tối đa 2 lần mỗi ngày trong game','Chỉ sở hữu 1 cái'],one:1},
+ {id:'leash',n:'Dây xích mèo',p:1000,t:['cat','item'],tag:'Cho mèo · Vật phẩm',img:'i_leash',d:'Đưa mèo cưng ra phố ngắm nắng, tha hồ khám phá!',e:['Vật phẩm vĩnh viễn','Mở khoá tính năng "đi dạo" (sắp có)','Chỉ sở hữu 1 cái'],one:1},
+ {id:'red',n:'Vòng cổ đỏ',p:200,t:['cat','cos'],tag:'Cho mèo · Trang phục',img:'i_red',eqk:'r',d:'Vòng đỏ chấm bi cùng chiếc chuông leng keng, mèo diện lên là nổi bật liền.',e:['Vật phẩm vĩnh viễn','Đổi diện mạo mèo sang vòng cổ đỏ','Bấm Sử dụng để đeo, Tháo ra để bỏ'],one:1},
+ {id:'blue',n:'Vòng cổ xanh',p:200,t:['cat','cos'],tag:'Cho mèo · Trang phục',img:'i_blue',eqk:'b',d:'Vòng xanh dịu mát kèm chuông nhỏ, đeo vào trông mèo thật lịch sự.',e:['Vật phẩm vĩnh viễn','Đổi diện mạo mèo sang vòng cổ xanh','Bấm Sử dụng để đeo, Tháo ra để bỏ'],one:1},
+ {id:'cape',n:'Áo choàng ma cà rồng',p:250,t:['cat','cos'],tag:'Cho mèo · Trang phục',img:'i_cape',eqk:'c',d:'Tấm áo choàng đen viền vàng, khoác lên là mèo thành quý tộc bóng đêm.',e:['Vật phẩm vĩnh viễn','Mặc được cùng vòng cổ và vòng thiên thần','Bấm Sử dụng để mặc, Tháo ra để bỏ'],one:1},
+ {id:'halo',n:'Vòng thiên thần',p:400,t:['cat','cos'],tag:'Cho mèo · Trang phục',img:'i_halo',eqk:'h',d:'Vòng sáng vàng lơ lửng trên đầu, mèo nhà bạn bỗng hoá thiên thần nhỏ.',e:['Vật phẩm vĩnh viễn','Đeo được cùng vòng cổ và áo choàng','Bấm Sử dụng để đeo, Tháo ra để bỏ'],one:1},
+ {id:'energy',n:'Nước tăng lực',p:35,t:['food'],tag:'Cho người · Thức ăn',img:'i_energy',d:'Lon tăng lực lạnh buốt, no bụng nhanh nhưng uống nhiều là hại người đấy.',e:['+45 độ no','−10 sức khoẻ']}];
 const TABS=[['all','Tất cả','🐾'],['cat','Mèo','🐱'],['food','Thức ăn','🍖'],['toy','Đồ chơi','⚽'],['cos','Trang phục','👕'],['item','Vật phẩm','📦']],TT=[22.7,31,39.2,47.6,56.2,64.7];
 let tab='all',sel=null,pg=0,qty=1;
 function renderShop(){
@@ -424,13 +441,13 @@ $('sTabs').onclick=e=>{const b=e.target.closest('.tb');if(b){tab=b.dataset.k;pg=
 $('sGrid').onclick=e=>{const b=e.target.closest('.card');if(b){sel=ITEMS.find(i=>i.id===b.dataset.i);qty=1;renderShop()}};
 $('qm').onclick=()=>{qty=Math.max(1,qty-1);renderShop()};$('qp').onclick=()=>{qty=Math.min(99,qty+1);renderShop()};
 $('sPrev').onclick=()=>{pg=Math.max(0,pg-1);sel=null;renderShop()};$('sNext').onclick=()=>{pg++;sel=null;renderShop()};
-$('sBuy').onclick=()=>{const s=sel,c=s.p*qty;if(money<c||(s.one&&inv[s.id]))return;money-=c;inv[s.id]=(inv[s.id]||0)+qty;if(s.id==='brush')st.brush=10;renderHud();renderShop();save();toast('Đã mua '+qty+' × '+s.n)};
+$('sBuy').onclick=()=>{const s=sel,c=s.p*qty;if(money<c||(s.one&&inv[s.id]))return;money-=c;inv[s.id]=(inv[s.id]||0)+qty;if(s.id==='brush')st.brush=10;if(s.id==='dumb')st.dbl=3;renderHud();renderShop();save();toast('Đã mua '+qty+' × '+s.n)};
 // ---- Túi đồ, dùng vật phẩm, đói theo giờ thật, âm thanh đi làm
 let bagMode='self',btab='all',bpg=0,bsel=null,bq=1,acc=0,lt=performance.now(),sfxS=null;
 const CATS=[['all','Tất cả','🐾'],['food','Thức ăn','🍖'],['toy','Đồ chơi','⚽'],['cos','Trang phục','👕'],['item','Vật phẩm','📦']],BT=[9.8,20.4,32.7,43.9,54];
-const EF={fish:{F:10,H:-5,J:5},food:{F:6,H:1,J:1},prem:{F:8,H:3,J:2},apple:{F:5,H:1},bread:{F:10,H:2}};
+const EF={energy:{F:45,H:-10},fish:{F:10,H:-5,J:5},food:{F:6,H:1,J:1},prem:{F:8,H:3,J:2},apple:{F:5,H:1},bread:{F:10,H:2}};
 const cl=v=>Math.max(0,Math.min(100,v));
-const canUse=i=>i.t.includes('food')?(bagMode==='cat')===i.t.includes('cat'):(bagMode==='cat'&&(i.id==='brush'||i.id==='yarn'));
+const canUse=i=>i.t.includes('food')?(bagMode==='cat')===i.t.includes('cat'):((bagMode==='cat'&&(i.id==='brush'||i.id==='yarn'||i.t.includes('cos')))||(bagMode==='self'&&i.id==='dumb'));
 function openBag(m){bagMode=m;btab='all';bpg=0;bsel=null;$('bag').hidden=false;renderBag()}
 const closeBag=()=>{$('bag').hidden=true};
 function renderBag(){
@@ -440,9 +457,11 @@ function renderBag(){
   $('bGrid').innerHTML=P.map(i=>`<button class="bc${bsel&&bsel.id===i.id?' on':''}" data-i="${i.id}"><img src="${ic(i.img)}" alt=""><span>${i.n} x${inv[i.id]}</span></button>`).join('');
   $('bPg').textContent=(bpg+1)+' / '+np;const s=bsel;$('bPop').hidden=!s;if(!s)return;
   const u=canUse(s),food=s.t.includes('food');bq=Math.max(1,Math.min(bq,inv[s.id]));
-  const note=bagMode==='self'&&s.t.includes('cat')?'Dùng cho mèo ở màn hình mèo':'Không dùng được ở đây';
-  $('bPop').innerHTML=`<button class="pb xb" id="bpx" style="position:absolute;right:2cqw;top:2cqw;width:6cqw;height:6cqw;padding:0;font-size:3.5cqw">✕</button><div class="bpi"><img src="${ic(s.img)}" alt=""><h3>${s.n}</h3><small>${s.tag}</small><p>${s.d}</p><ul>${s.e.map(x=>`<li>${x}</li>`).join('')}</ul>${s.id==='brush'?`<small>Độ bền còn ${st.brush||10}/10</small>`:''}</div><div class="bpf">${u&&food?`<div class="bq"><button class="pb" id="bqm" type="button">−</button><b>${bq}</b><button class="pb" id="bqp" type="button">+</button></div>`:''}<button class="pb" id="bUse" type="button"${u?'':' disabled'}>${u?'Sử dụng':note}</button></div>`}
+  const note=s.id==='leash'?'Mở khoá "đi dạo" (sắp có)':bagMode==='self'&&s.t.includes('cat')?'Dùng cho mèo ở màn hình mèo':'Không dùng được ở đây';
+  $('bPop').innerHTML=`<button class="pb xb" id="bpx" style="position:absolute;right:2cqw;top:2cqw;width:6cqw;height:6cqw;padding:0;font-size:3.5cqw">✕</button><div class="bpi"><img src="${ic(s.img)}" alt=""><h3>${s.n}</h3><small>${s.tag}</small><p>${s.d}</p><ul>${s.e.map(x=>`<li>${x}</li>`).join('')}</ul>${s.id==='brush'?`<small>Độ bền còn ${st.brush||10}/10</small>`:''}${s.id==='dumb'?`<small>Độ bền còn ${st.dbl||3}/3 · hôm nay ${st.dbD===dayCount()?st.dbN||0:0}/2 lần</small>`:''}</div><div class="bpf">${u&&food?`<div class="bq"><button class="pb" id="bqm" type="button">−</button><b>${bq}</b><button class="pb" id="bqp" type="button">+</button></div>`:''}<button class="pb" id="bUse" type="button"${u?'':' disabled'}>${u?(s.eqk&&eqOn(s)?'Tháo ra':'Sử dụng'):note}</button></div>`}
 function useItem(){const i=bsel;if(!i||!canUse(i))return;
+  if(i.eqk){toggleEq(i.eqk);toast(eqOn(i)?'Đã đeo cho mèo':'Đã tháo ra');cOv();renderBag();save();return}
+  if(i.id==='dumb'){const d=dayCount();if(st.dbD!==d){st.dbD=d;st.dbN=0}if(st.dbN>=2)return toast('Hôm nay đã tập đủ 2 lần rồi');st.dbN++;st.dbl=(st.dbl||3)-1;hunger=cl(hunger+5);health=cl(health+2);if(st.dbl<=0){inv.dumb=0;st.dbl=0}renderHud();renderBag();save();return toast('Tập tạ: +5 độ no, +2 sức khoẻ')}
   if(i.id==='brush'){st.brush=(st.brush||10)-1;cJ=cl(cJ+3);if(st.brush<=0){inv.brush=0;st.brush=0}toast('+3 niềm vui')}
   else if(i.id==='yarn'){if(st.yarnDay===dayCount())return toast('Hôm nay mèo đã chơi bóng len, đợi 00:00 nhé');st.yarnDay=dayCount();cJ=cl(cJ+12);cH=cl(cH+2);toast('+12 niềm vui, +2 sức khoẻ')}
   else{const e=EF[i.id],n=Math.min(bq,inv[i.id]),cat=i.t.includes('cat');
@@ -456,7 +475,7 @@ $('bPrev').onclick=()=>{bpg=Math.max(0,bpg-1);bsel=null;renderBag()};$('bNext').
 $('bX').onclick=closeBag;$('bag').onclick=e=>{if(e.target.id==='bag')closeBag()};
 $('bimg').src='data:image/jpeg;base64,'+A.bagbg;
 $('bagBtn').onclick=()=>openBag('self');$('cUse').onclick=()=>openBag('cat');
-$('bed').onclick=()=>toast('Phòng ngủ sẽ có sau');
+
 // mỗi 10 phút thật (chỉ tính khi đã đăng nhập, ngoài menu): người và mèo giảm 1 độ no
 setInterval(()=>{const n=performance.now(),dt=Math.min((n-lt)/1000,5);lt=n;if(!rec||state==='menu')return;acc+=dt;
   if(acc>=600){const k=Math.floor(acc/600);acc-=k*600;hunger=Math.max(0,hunger-k);cF=Math.max(0,cF-k);renderHud();if(state==='cat')renderCat();if(!$('bag').hidden)renderBag()}
@@ -482,7 +501,7 @@ const dayAt=g=>{const h=((360+g)%1440)/60;return h>=5&&h<18},tmf=t=>{const d=t&&
 const rd=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(f)});
 async function shrink(f,max,q){const u=await rd(f),im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u}),k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));const x=c.getContext('2d');x.fillStyle='#efe6cf';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);return c.toDataURL('image/jpeg',q)}
 async function getP(u,force){if(!force&&PR[u]&&Date.now()-PR[u].t<60000)return PR[u].d;try{const s=await fs.doc('cathat_profiles/'+u).get(),d=s.exists?s.data():null;PR[u]={d,t:Date.now()};return d}catch(e){return null}}
-async function pubSync(){if(!me||!rec)return;try{await fs.doc('cathat_profiles/'+me).set({name:rec.name||'',gender:rec.gender||'',cat:rec.cat||'',days:dayCount(),gt:Math.round(gt*100)/100,cH,cF,cJ,at:TS()},{merge:true})}catch(e){console.warn(e)}}
+async function pubSync(){if(!me||!rec)return;try{await fs.doc('cathat_profiles/'+me).set({name:rec.name||'',gender:rec.gender||'',cat:rec.cat||'',days:dayCount(),gt:Math.round(gt*100)/100,cH,cF,cJ,eq:(st&&st.eq)||'',at:TS()},{merge:true})}catch(e){console.warn(e)}}
 const hAv=()=>{const e=$('hAv'),s=myAv||myThumb;e.hidden=!s;if(s)e.src=s};
 async function social(u){me=u.uid;unsubs.forEach(f=>f());unsubs=[];const C=c=>fs.collection(c),er=e=>console.warn(e);
   unsubs.push(C('cathat_pairs').where('members','array-contains',me).onSnapshot(s=>{FR.fr=s.docs.map(d=>d.data().members.find(m=>m!==me));fRender()},er));
@@ -492,10 +511,10 @@ async function social(u){me=u.uid;unsubs.forEach(f=>f());unsubs=[];const C=c=>fs
   unsubs.push(C('cathat_feeds').where('to','==',me).onSnapshot(s=>{let n=0;s.docs.forEach(d=>{const x=d.data(),t=x.ts&&x.ts.toMillis();st.fd=st.fd||{};if(t&&t>(st.fd[x.from]||0)){st.fd[x.from]=t;cF=cl(cF+10);n++}});if(n){toast('Có bạn cho mèo ăn! +'+10*n+' độ no');renderHud();save()}},er));
   const p=await getP(me,1);myThumb=p&&p.thumb||'';
   {const d=await getAv(me,1);if(d){myAv=d;const gif=/^data:image\/gif/.test(d);if(!p||p.hasAv!==(gif?'gif':true)){const th=await mkThumb(d);if(th){myThumb=th;fs.doc('cathat_profiles/'+me).set({thumb:th,hasAv:gif?'gif':true},{merge:true}).catch(()=>{});PR={}}}}}
-  hAv();pubSync()}
+  hAv();pubSync().then(ensureId)}
 const av=(p,u)=>`<div class="av"><img class="p"${u&&p&&p.hasAv?` data-g="${u}"`:''} src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>`;
 const row=(u,p,b)=>`<div class="row"><div class="avw" data-a="view" data-u="${u}">${av(p,u)}</div><div class="rn" data-a="view" data-u="${u}"><b>${esc(p&&p.name||'Người chơi')}</b><small>Day: ${p&&p.days!=null?p.days:0}</small></div>${b}</div>`;
-const prof=(p,self,acts)=>`<div class="pf"><div class="pa"><div class="av big"><img class="p" src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>${self?'<button class="lk2" data-a="chav">thay đổi avata</button>':''}${acts||''}</div><div class="pi"><p><b>Tên:</b> ${esc(p&&p.name)}</p><p><b>Giới tính:</b> ${esc(p&&p.gender||'—')}</p><p><b>Tên mèo:</b> ${esc(p&&p.cat||'—')}</p><p><b>Day:</b> ${p&&p.days!=null?p.days:0}</p><p><b>Mô tả:</b> ${self?'<button class="lk2" data-a="edesc">thay đổi</button>':''}</p><div class="desc" id="dsc">${esc(p&&p.desc||'Chưa có mô tả')}</div></div></div>`;
+const prof=(p,self,acts)=>`<div class="pf"><div class="pa"><div class="av big"><img class="p" src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>${self?'<button class="lk2" data-a="chav">thay đổi avata</button>':''}<div class="uid">id:${fmtId(p&&p.num)}</div>${acts||''}</div><div class="pi"><p><b>Tên:</b> ${esc(p&&p.name)}</p><p><b>Giới tính:</b> ${esc(p&&p.gender||'—')}</p><p><b>Tên mèo:</b> ${esc(p&&p.cat||'—')}</p><p><b>Day:</b> ${p&&p.days!=null?p.days:0}</p><p><b>Mô tả:</b> ${self?'<button class="lk2" data-a="edesc">thay đổi</button>':''}</p><div class="desc" id="dsc">${esc(p&&p.desc||'Chưa có mô tả')}</div></div></div>`;
 const bub=m=>{const ok=re=>typeof m.data==='string'&&re.test(m.data);let c;
   if(m.kind==='text')c=esc(m.text);else if(m.kind==='img'||m.kind==='gif')c=ok(/^data:image\/(png|jpeg|gif|webp);base64,/)?`<img src="${m.data}" alt="">`:'[ảnh lỗi]';
   else if(m.kind==='voice')c=ok(/^data:audio\//)?`<audio controls src="${m.data}"></audio>`:'[ghi âm lỗi]';
@@ -568,7 +587,7 @@ async function visit(u){const p=await getP(u,1);if(!p)return toast('Không vào 
     const sc=pick(dayAt(p.gt||0)?DAY:NIGHT,lastScene);lastScene=sc;show(sc);placeCat(sc);renderHud();
     vUnsub&&vUnsub();vUnsub=fs.doc('cathat_profiles/'+u).onSnapshot(s=>{if(visiting&&s.exists){visiting.p=s.data();renderHud();if(state==='cat')renderCat()}})})}
 $('back').onclick=()=>cover(()=>{vUnsub&&vUnsub();vUnsub=null;visiting=null;$('game').classList.remove('visit');goMain()});
-function renderCat(){const v=visiting,p=v?v.p:null,H=v?(p.cH??100):cH,F=v?(p.cF??100):cF,J=v?(p.cJ??100):cJ;
+function renderCat(){cOv();const v=visiting,p=v?v.p:null,H=v?(p.cH??100):cH,F=v?(p.cF??100):cF,J=v?(p.cJ??100):cJ;
   $('cHt').textContent=H+'/100';$('cFt').textContent=F+'/100';$('cJt').textContent=J+'/100';$('cHc').style.width=(100-H)+'%';$('cFc').style.width=(100-F)+'%';$('cJc').style.width=(100-J)+'%';
   $('cName').textContent=v?(p.cat||'Mèo'):((rec&&rec.cat)||'Mèo');$('cUse').hidden=!!v;
   if(v){const l=((st.lf||{})[v.u]||0)+288e5-Date.now();$('cPet').textContent=l>0?'Cho ăn (sau '+Math.ceil(l/36e5)+' giờ)':'Cho ăn (+10 độ no)';$('cPet').disabled=l>0}
@@ -592,5 +611,18 @@ async function resumeLogin(u){try{const s=await PL(u.uid).get();if(s.exists)rec=
 async function logout(){await save();try{await fa.signOut()}catch(e){}unsubs.forEach(f=>f());unsubs=[];if(chatUn){chatUn();chatUn=null}vUnsub&&vUnsub();vUnsub=null;fClose();
   me=null;rec=null;visiting=null;myThumb='';myAv='';AVC={};PR={};lastSig='';gt=0;money=0;health=100;hunger=100;cH=100;cF=100;cJ=100;inv={};st={};acc=0;$('hAv').hidden=true;$('game').classList.remove('visit');renderHud();toMenu()}
 $('sLog').onclick=()=>cover(logout);
+// ---- Ngủ, id người chơi, trang phục mèo
+let idW=5,slN=0;const CPOS={"b": [9.81, 19.0, 23.41, 71.18], "r": [9.77, 18.97, 23.51, 71.09], "cr": [-0.9, 18.97, 44.74, 71.88], "cb": [-0.79, 19.08, 44.54, 71.79], "c": [-0.69, 19.23, 44.25, 71.01], "hc": [-1.16, 12.94, 45.24, 76.48], "hcr": [-1.1, 11.91, 45.09, 77.6], "hcb": [-0.7, 14.47, 44.44, 75.87], "hb": [8.16, 12.47, 29.41, 75.26], "hr": [9.49, 12.72, 23.96, 76.56], "h": [9.71, 9.45, 24.9, 11.72]};
+const fmtId=n=>n==null?'—':String(n).padStart(Math.max(5,idW),'0');
+async function ensureId(){const pr=fs.doc('cathat_profiles/'+me),c=fs.doc('cathat_meta/counter');
+  try{await fs.runTransaction(async tx=>{const ps=await tx.get(pr);if(ps.exists&&ps.data().num)return;const cs=await tx.get(c),n=(cs.exists?cs.data().n:0)+1;tx.set(c,{n});tx.set(pr,{num:n},{merge:true})});PR={}}catch(e){console.warn(e)}
+  try{const s=await fs.doc('cathat_meta/counter').get();if(s.exists)idW=String(s.data().n).length}catch(e){}}
+const eqOn=s=>(st.eq||'').includes(s.eqk);
+function toggleEq(k){const e=st.eq||'';let h=e.includes('h'),c=e.includes('c'),col=e.includes('r')?'r':e.includes('b')?'b':'';if(k==='h')h=!h;else if(k==='c')c=!c;else col=col===k?'':k;st.eq=(h?'h':'')+(c?'c':'')+col}
+function cOv(){const e=(visiting?visiting.p.eq:st.eq)||'',c=$('cCol');if(e&&A['cat_'+e]&&CPOS[e]){const p=CPOS[e];c.src='data:image/webp;base64,'+A['cat_'+e];c.style.cssText=`left:${p[0]}%;top:${p[1]}%;width:${p[2]}%;height:${p[3]}%`;c.hidden=false}else c.hidden=true}
+function slr(){$('sNum').textContent=slN;$('sInfo').textContent=slN?'Hồi '+Math.min(100,slN*12)+' độ no':'Chọn số tiếng ngủ';$('sGo').disabled=!slN}
+$('sleep').onclick=()=>{slN=0;$('slp').hidden=false;slr()};
+$('sMin').onclick=()=>{slN=Math.max(0,slN-1);slr()};$('sPlus').onclick=()=>{slN=Math.min(12,slN+1);slr()};$('sNo').onclick=()=>{$('slp').hidden=true};
+$('sGo').onclick=()=>{if(!slN)return;const h=slN;$('slp').hidden=true;cover(()=>{advance(h,true);renderHud();save();if(isDay()!==curDay)toMain();toast('Ngủ '+h+' tiếng: hồi '+Math.min(100,h*12)+' độ no')})};
 show('menu');song('mus_menu',true);
 </script></body></html>
