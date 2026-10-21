@@ -291,7 +291,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <form class="pnl" id="fAuth" hidden>
       <h2 id="aT"></h2>
       <input id="iN" placeholder="Tên của bạn" maxlength="30" autocomplete="name">
-      <div id="gd" class="gd" hidden><button type="button" data-g="Nam">Nam</button><button type="button" data-g="Nữ">Nữ</button><button type="button" data-g="Khác">Khác</button></div>
+      <div id="gd" class="gd" hidden><button type="button" data-g="Nam">Nam</button><button type="button" data-g="Nữ">Nữ</button></div>
       <input id="iE" type="text" inputmode="email" placeholder="Gmail hoặc tên của bạn" autocomplete="username" autocapitalize="off" autocorrect="off">
       <input id="iK" placeholder="Mã 5 số" inputmode="numeric" maxlength="5" autocomplete="one-time-code" hidden>
       <input id="iP" type="password" placeholder="Mật khẩu (từ 6 ký tự)">
@@ -303,7 +303,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
       <h2>Hoàn tất hồ sơ</h2>
       <p class="inf">Hãy nhập tên và giới tính để bạn bè nhận ra bạn nhé.</p>
       <input id="pN" placeholder="Tên của bạn" maxlength="30" autocomplete="name">
-      <div class="gd" id="pG"><button type="button" data-g="Nam">Nam</button><button type="button" data-g="Nữ">Nữ</button><button type="button" data-g="Khác">Khác</button></div>
+      <div class="gd" id="pG"><button type="button" data-g="Nam">Nam</button><button type="button" data-g="Nữ">Nữ</button></div>
       <p class="err" id="pE"></p>
       <button class="pb" type="submit">Tiếp tục</button>
     </form>
@@ -399,7 +399,7 @@ $('fAuth').onsubmit=async e=>{e.preventDefault();
     else{u=(await fa.signInWithEmailAndPassword(em,pw)).user;const s=await PL(u.uid).get();
       if(s.exists)rec=s.data();else{rec={name:u.displayName||em.split('@')[0],gender:'',email:em,cat:'',gt:0,money:0,health:100,hunger:100};await PL(u.uid).set({...rec,createdAt:TS()})}}
     try{const mp=JSON.parse(localStorage.getItem('cathat_names')||'{}');mp[(rec.name||'').toLowerCase()]=em;localStorage.setItem('cathat_names',JSON.stringify(mp))}catch(x){}
-    gt=rec.gt||0;money=rec.money||0;health=rec.health??100;hunger=rec.hunger??100;cH=rec.cH??100;cF=rec.cF??100;cJ=rec.cJ??100;inv=rec.inv||{};st=rec.st||{};acc=st.acc||0;renderHud();social(u);if(!rec.gender){$('pN').value=rec.name||'';pgn='';$('pE').textContent='';document.querySelectorAll('#pG button').forEach(x=>x.classList.remove('on'));form('p')}else rec.cat?enter():form('n')
+    gt=rec.gt||0;money=rec.money||0;health=rec.health??100;hunger=rec.hunger??100;cH=rec.cH??100;cF=rec.cF??100;cJ=rec.cJ??100;inv=rec.inv||{};st=rec.st||{};acc=st.acc||0;renderHud();social(u);if(!['Nam','Nữ'].includes(rec.gender)){$('pN').value=rec.name||'';pgn='';$('pE').textContent='';document.querySelectorAll('#pG button').forEach(x=>x.classList.remove('on'));form('p')}else rec.cat?enter():form('n')
   }catch(x){E(fe(x))}};
 $('fName').onsubmit=async e=>{e.preventDefault();const n=$('iC').value.trim();
   if(!n){$('cE').textContent='Hãy đặt tên cho mèo';return}rec.cat=n;await save();introNext=true;enter()};
@@ -556,7 +556,7 @@ async function social(u){me=u.uid;unsubs.forEach(f=>f());unsubs=[];const C=c=>fs
   hAv();pubSync().then(ensureId)}
 const av=(p,u)=>`<div class="av"><img class="p"${u&&p&&p.hasAv?` data-g="${u}"`:''} src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>`;
 const row=(u,p,b)=>`<div class="row"><div class="avw" data-a="view" data-u="${u}">${av(p,u)}</div><div class="rn" data-a="view" data-u="${u}"><b>${esc(p&&p.name||'Người chơi')}</b><small>Day: ${p&&p.days!=null?p.days:0}</small></div>${b}</div>`;
-const prof=(p,self,acts)=>`<div class="pf"><div class="pa"><div class="av big"><img class="p" src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>${self?'<button class="lk2" data-a="chav">thay đổi avata</button>':''}<div class="uid">id:${fmtId(p&&p.num)}</div>${acts||''}</div><div class="pi"><p><b>Tên:</b> ${esc(p&&p.name)}</p><p><b>Giới tính:</b> ${esc(p&&p.gender||'—')}</p><p><b>Tên mèo:</b> ${esc(p&&p.cat||'—')}</p><p><b>Day:</b> ${p&&p.days!=null?p.days:0}</p><p><b>Mô tả:</b> ${self?'<button class="lk2" data-a="edesc">thay đổi</button>':''}</p><div class="desc" id="dsc">${esc(p&&p.desc||'Chưa có mô tả')}</div></div></div>`;
+const prof=(p,self,acts)=>`<div class="pf"><div class="pa"><div class="av big"><img class="p" src="${p&&p.thumb?p.thumb:DEF}" alt=""><i class="f"></i></div>${self?'<button class="lk2" data-a="chav">thay đổi avata</button>':''}<div class="uid">id:${fmtId(p&&p.num)}</div>${acts||''}</div><div class="pi"><p><b>Tên:</b> ${esc(p&&p.name)}</p><p id="gnp"><b>Giới tính:</b> ${esc(p&&p.gender||'—')}${self&&isAdmin()?' <button class="lk2" data-a="egen">thay đổi</button>':''}</p><p><b>Tên mèo:</b> ${esc(p&&p.cat||'—')}</p><p><b>Day:</b> ${p&&p.days!=null?p.days:0}</p><p><b>Mô tả:</b> ${self?'<button class="lk2" data-a="edesc">thay đổi</button>':''}</p><div class="desc" id="dsc">${esc(p&&p.desc||'Chưa có mô tả')}</div></div></div>`;
 const bub=m=>{const ok=re=>typeof m.data==='string'&&re.test(m.data);let c;
   if(m.kind==='text')c=esc(m.text);else if(m.kind==='img'||m.kind==='gif')c=ok(/^data:image\/(png|jpeg|gif|webp);base64,/)?`<img src="${m.data}" alt="">`:'[ảnh lỗi]';
   else if(m.kind==='voice')c=ok(/^data:audio\//)?`<audio controls src="${m.data}"></audio>`:'[ghi âm lỗi]';
@@ -623,6 +623,8 @@ $('fBody').onclick=async e=>{const b=e.target.closest('[data-a]');if(!b)return;c
   else if(a==='visit')visit(fCur.u);else if(a==='back'){fTab=fBack||'list';fRender(1)}else if(a==='chav')$('avIn').click();
   else if(a==='edesc'){const p=await getP(me);$('dsc').outerHTML='<textarea id="dIn" maxlength="300">'+esc(p&&p.desc||'')+'</textarea><div class="acts"><button class="pb" data-a="sdesc">Lưu</button></div>'}
   else if(a==='sdesc'){try{await fs.doc('cathat_profiles/'+me).set({desc:$('dIn').value.trim().slice(0,300)},{merge:true});PR={};toast('Đã lưu mô tả')}catch(x){toast('Không lưu được')}fRender(1)}
+  else if(a==='egen'){if(!isAdmin())return;$('gnp').innerHTML='<b>Giới tính:</b> <button class="lk2" data-a="sgen" data-g="Nam">Nam</button> · <button class="lk2" data-a="sgen" data-g="Nữ">Nữ</button>'}
+  else if(a==='sgen'){if(!isAdmin())return;const g=b.dataset.g;if(g!=='Nam'&&g!=='Nữ')return;try{await PL(me).update({gender:g});await fs.doc('cathat_profiles/'+me).set({gender:g},{merge:true});rec.gender=g;PR={};toast('Đã đổi giới tính: '+g)}catch(x){toast('Không đổi được giới tính')}fRender(1)}
   else if(a==='older'){chatLim+=60;chatSub(true)}else if(a==='file')$('flIn').click();else if(a==='img')$('chIn').click();else if(a==='mic')mic();else if(a==='send')sendT()};
 // ---- Thăm nhà bạn: thời gian theo bạn, mèo bạn, cho ăn +10 (8 tiếng/lần)
 async function visit(u){const p=await getP(u,1);if(!p)return toast('Không vào được nhà bạn');fClose();
@@ -649,7 +651,7 @@ let resuming=false;const authReady=new Promise(ok=>{const un=fa.onAuthStateChang
 async function resumeLogin(u){try{const s=await PL(u.uid).get();if(s.exists)rec=s.data();else{rec={name:u.displayName||(u.email||'').split('@')[0],gender:'',email:(u.email||'').toLowerCase(),cat:'',gt:0,money:0,health:100,hunger:100};await PL(u.uid).set({...rec,createdAt:TS()})}
   try{const mp=JSON.parse(localStorage.getItem('cathat_names')||'{}');mp[(rec.name||'').toLowerCase()]=rec.email||(u.email||'').toLowerCase();localStorage.setItem('cathat_names',JSON.stringify(mp))}catch(x){}
   gt=rec.gt||0;money=rec.money||0;health=rec.health??100;hunger=rec.hunger??100;cH=rec.cH??100;cF=rec.cF??100;cJ=rec.cJ??100;inv=rec.inv||{};st=rec.st||{};acc=st.acc||0;lastSig='';renderHud();social(u);
-  if(!rec.gender){$('pN').value=rec.name||'';pgn='';$('pE').textContent='';document.querySelectorAll('#pG button').forEach(x=>x.classList.remove('on'));form('p')}else rec.cat?enter():form('n')}
+  if(!['Nam','Nữ'].includes(rec.gender)){$('pN').value=rec.name||'';pgn='';$('pE').textContent='';document.querySelectorAll('#pG button').forEach(x=>x.classList.remove('on'));form('p')}else rec.cat?enter():form('n')}
   catch(x){mode('login',fe(x));form('a')}}
 async function logout(){await save();try{await fa.signOut()}catch(e){}unsubs.forEach(f=>f());unsubs=[];if(chatUn){chatUn();chatUn=null}vUnsub&&vUnsub();vUnsub=null;fClose();
   me=null;rec=null;visiting=null;myThumb='';myAv='';AVC={};PR={};lastSig='';gt=0;money=0;health=100;hunger=100;cH=100;cF=100;cJ=100;inv={};st={};acc=0;$('hAv').hidden=true;$('game').classList.remove('visit');renderHud();toMenu()}
