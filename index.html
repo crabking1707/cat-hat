@@ -216,6 +216,14 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 #wActions{position:absolute;left:8%;right:8%;bottom:6%;display:flex;justify-content:center;gap:2cqw;z-index:2}
 #wActions .pb{font-size:max(16px,2.5cqw);padding:.8cqw 2.4cqw}
 #wFinish{background:#7a4e2e}
+#achBtn{left:38%;top:.5%;width:8%;height:13%;display:none;z-index:3;font-size:3.3cqw;color:#ffe08a;text-shadow:0 .2cqw #3b2412;background:#6e4524;border:.25cqw solid #e0b050;border-radius:1cqw;pointer-events:auto}
+#achBtn.show{display:block}
+#achPanel{inset:0;z-index:8;display:grid;place-items:center;background:#0008;pointer-events:auto}
+.achBox{width:min(72%,520px);max-height:84%;overflow:auto;padding:2.2cqw 2.8cqw;background:#fbf1d5;color:#4a2c14;border:.5cqw solid #8a5a2c;box-shadow:0 .7cqw #2b1f17;font-family:'Baloo 2',system-ui,sans-serif}
+.achBox h2{margin:0 0 1.2cqw;text-align:center;color:#6e4524;font-size:max(20px,3.6cqw)}
+.achRow{display:grid;grid-template-columns:2.8em 1fr auto;gap:1cqw;align-items:center;padding:1cqw;margin:.7cqw 0;background:#f4e5c4;border:.25cqw solid #c9ab7a}
+.achRow.done{background:#e6efc6;border-color:#6b8d3a}.achIcon{font-size:2.8cqw}.achName{font-weight:700;font-size:max(14px,2.1cqw)}.achDesc{font-size:max(12px,1.7cqw);color:#7b6444}.achReward{font-weight:700;color:#3d6128;white-space:nowrap;font-size:max(12px,1.8cqw)}
+#achClose{display:block;margin:1.2cqw auto 0}
 #walkBtn{left:70.5%;top:82%;width:12%;height:13%;display:none;z-index:3;background:#7a5a36;color:#fff1c4;border:.35cqw solid #e6b85f;border-radius:1.2cqw;box-shadow:0 .5cqw #392314;line-height:1;font:700 2cqw 'Baloo 2',system-ui,sans-serif;text-shadow:0 .2cqw #392314}
 #walkBtn.show{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.2cqw}
 #walkBtn b{font-size:4.2cqw;line-height:1}
@@ -235,7 +243,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <div class="bar" style="left:2.9%;top:12.7%;width:23.7%;height:5.1%"><i id="fC" class="f"></i></div>
     <b class="lb" id="hT" style="left:3.6%;top:.64%"></b><b class="lb" id="fT" style="left:3.6%;top:10.5%"></b>
     <div id="mT" style="left:5.8%;top:89.7%;width:13.2%;height:3.4%"></div>
-    <button class="hit" id="cal" aria-label="Lịch" style="left:28.1%;top:.4%;width:9.5%;height:15.5%"></button>
+    <button class="hit" id="cal" aria-label="Lịch" style="left:28.1%;top:.4%;width:9.5%;height:15.5%"></button><button class="hit" id="achBtn" aria-label="Thành tựu">🏆</button>
     <button class="hit" id="gear" aria-label="Cài đặt" style="left:92.5%;top:.8%;width:7.2%;height:13%"></button>
     <button class="hit" id="work" aria-label="Làm" style="left:90.8%;top:15%;width:9.2%;height:17%"></button>
     <button class="hit" id="catHit" aria-label="Mèo"></button>
@@ -248,6 +256,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <button class="hit" id="shop" aria-label="Cửa hàng" style="left:86.8%;top:75.5%;width:11.6%;height:20%"></button>
   </div>
 
+  <div id="achPanel" hidden><div class="achBox"><h2>🏆 Thành tựu</h2><div id="achList"></div><button class="pb" id="achClose">Đóng</button></div></div>
   <div id="walk" class="ui" hidden>
     <video id="walkBg" muted loop playsinline></video><div id="walkShade"></div><div id="weatherFx"></div>
     <div id="walkPanel"><div><div id="wTitle">ĐI DẠO</div><div id="wSub">Dắt mèo ra phố, giữ cả hai luôn no bụng</div></div><div id="wStats"><span class="wStat">Bạn: <b id="wHunger">100</b> 🍖</span><span class="wStat">Mèo: <b id="wCatFood">100</b> 🍖</span><span id="wWeatherBadge">☀️ Nắng dịu</span></div></div>
@@ -403,7 +412,7 @@ function applyVol(){const x=vm*vs;gn?gn.gain.value=x:au.volume=x;$('vM').textCon
 $('rM').oninput=e=>{vm=+e.target.value;applyVol()};$('rS').oninput=e=>{vs=+e.target.value;applyVol()};applyVol();
 // ---- Cài đặt / creator
 const inG=()=>['game','day','walk','work','cat','shp'].includes(state)||(['set','cre'].includes(state)&&from==='game');
-const hideAll=()=>['menu','game','day','walk','set','cre','cat','shp','bag','slp'].forEach(i=>$(i).hidden=true);
+const hideAll=()=>['menu','game','day','walk','achPanel','set','cre','cat','shp','bag','slp'].forEach(i=>$(i).hidden=true);
 const openSet=f=>cover(()=>{from=f;state='set';hideAll();$('set').hidden=false});
 function toMenu(){save();state='menu';hideAll();$('menu').hidden=false;show('menu');song('mus_menu',true)}
 $('mset').onclick=()=>openSet('menu');$('gear').onclick=()=>openSet('game');
@@ -462,6 +471,22 @@ const goMain=()=>{state='game';$('game').classList.remove('lock');$('day').hidde
 $('cal').onclick=()=>cover(()=>{state='day';$('game').hidden=true;$('day').hidden=false;v.pause();renderDay()});
 $('exit').onclick=()=>cover(goMain);
 
+// ---- Thành tựu: lưu trong st để đồng bộ cùng hồ sơ người chơi
+const ACHIEVEMENTS=[
+ {id:'first_walk',name:'Bước chân đầu tiên',desc:'Hoàn thành 1 chuyến đi dạo',goal:1,metric:'walks',reward:50},
+ {id:'walk_five',name:'Người bạn của đường phố',desc:'Hoàn thành 5 chuyến đi dạo',goal:5,metric:'walks',reward:150},
+ {id:'minigame_three',name:'Nhà thám hiểm',desc:'Hoàn thành 3 minigame ngẫu nhiên',goal:3,metric:'minis',reward:80},
+ {id:'weather_three',name:'Bốn mùa bên nhau',desc:'Trải nghiệm mưa, nắng gắt và tuyết',goal:3,metric:'weather',reward:120},
+ {id:'stray_friend',name:'Bạn mới trong hẻm nhỏ',desc:'Giúp đỡ một chú mèo hoang',goal:1,metric:'stray',reward:70},
+ {id:'lucky_finder',name:'Mắt cú',desc:'Nhặt tiền được 3 lần',goal:3,metric:'money',reward:100},
+ {id:'mystery_customer',name:'Khách quen của thương gia',desc:'Mua hàng từ thương gia bí ẩn',goal:1,metric:'merchant',reward:60}
+];
+function achState(){if(!st.ach)st.ach={walks:0,minis:0,weather:{},stray:0,money:0,merchant:0,done:{}};if(!st.ach.weather)st.ach.weather={};if(!st.ach.done)st.ach.done={};return st.ach}
+function achValue(a){const q=achState();return a.metric==='weather'?Object.keys(q.weather).length:(q[a.metric]||0)}
+function checkAchievements(){const q=achState();for(const a of ACHIEVEMENTS){if(!q.done[a.id]&&achValue(a)>=a.goal){q.done[a.id]=1;money+=a.reward;cJ=cl(cJ+3);toast('🏆 '+a.name+' · +'+a.reward+'$');}}if(!$('achPanel').hidden)renderAchievements();}
+function achTrack(metric,n=1){const q=achState();if(metric==='weather')return checkAchievements();q[metric]=(q[metric]||0)+n;checkAchievements();save()}
+function renderAchievements(){const q=achState();$('achList').innerHTML=ACHIEVEMENTS.map(a=>{const v=Math.min(a.goal,achValue(a)),done=!!q.done[a.id];return `<div class="achRow${done?' done':''}"><span class="achIcon">${done?'✅':'🔒'}</span><div><div class="achName">${a.name}</div><div class="achDesc">${a.desc} · ${v}/${a.goal}</div></div><span class="achReward">${done?'Đã nhận':'+'+a.reward+'$'}</span></div>`}).join('')}
+$('achBtn').onclick=()=>{renderAchievements();$('achPanel').hidden=false};$('achClose').onclick=()=>$('achPanel').hidden=true;$('achPanel').onclick=e=>{if(e.target.id==='achPanel')$('achPanel').hidden=true};
 // ---- Đi dạo: mở khi sở hữu dây xích mèo; tiêu hao độ no của cả hai
 let walkStep=0,walkActive=false,walkEvent=null,walkWeather=null;
 function renderWalkCat(){const e=st.eq||'';const a=[];if(e.includes('h'))a.push('😇');if(e.includes('c'))a.push('🧥');if(e.includes('r'))a.push('🔴');else if(e.includes('b'))a.push('🔵');$('wCatOutfit').textContent=a.join(' ');}
@@ -495,7 +520,7 @@ const WALK_WEATHER=[
   {id:'snow',icon:'❄️',name:'Tuyết rơi',hint:'Tuyết phủ trắng lối đi. Mèo thích thú nhưng bị lạnh.',catF:-7,catH:-5,catJ:2,personF:-4}
 ];
 function setWalkWeather(w){
-  walkWeather=w||WALK_WEATHER[Math.random()*WALK_WEATHER.length|0];const fx=$('weatherFx');fx.className=walkWeather.id;$('wWeatherBadge').textContent=walkWeather.icon+' '+walkWeather.name;
+  walkWeather=w||WALK_WEATHER[Math.random()*WALK_WEATHER.length|0];achState().weather[walkWeather.id]=1;checkAchievements();const fx=$('weatherFx');fx.className=walkWeather.id;$('wWeatherBadge').textContent=walkWeather.icon+' '+walkWeather.name;
 }
 function applyWalkWeather(){
   if(!walkWeather)return;const w=walkWeather;hunger=Math.max(0,hunger+w.personF);cF=Math.max(0,cF+w.catF);cH=cl(cH+w.catH);cJ=cl(cJ+w.catJ);$('wHint').textContent=w.hint;walkStats();renderHud();
@@ -511,7 +536,7 @@ const WALK_EVENTS=[
 function showWalkEvent(){
   walkEvent={...WALK_EVENTS[Math.random()*WALK_EVENTS.length|0]};$('wEventTitle').textContent=walkEvent.title;$('wEventText').textContent=walkEvent.text;$('wEventA').textContent=walkEvent.a;$('wEventB').textContent=walkEvent.b;$('wEvent').hidden=false;$('wStep').hidden=true;
 }
-function endWalkEvent(message){$('wEvent').hidden=true;walkEvent=null;$('wHint').textContent=message;walkStats();renderHud();save();$('wStep').hidden=false;}
+function endWalkEvent(message){achTrack('minis');$('wEvent').hidden=true;walkEvent=null;$('wHint').textContent=message;walkStats();renderHud();save();$('wStep').hidden=false;}
 function resolveWalkEvent(take){
   if(!walkEvent)return;
   if(walkEvent.kind==='stray'&&walkEvent.phase===0){
@@ -519,7 +544,7 @@ function resolveWalkEvent(take){
     return endWalkEvent('Bạn và mèo tiếp tục bước đi, nhưng vẫn ngoái lại nhìn mèo hoang.');
   }
   if(walkEvent.kind==='stray'){
-    if(take){cF=Math.max(0,cF-3);cJ=cl(cJ+10);return endWalkEvent('Bạn chia sẻ một ít thức ăn. Mèo hoang vui vẻ cọ vào chân bạn rồi chạy đi.');}
+    if(take){cF=Math.max(0,cF-3);cJ=cl(cJ+10);achTrack('stray');return endWalkEvent('Bạn chia sẻ một ít thức ăn. Mèo hoang vui vẻ cọ vào chân bạn rồi chạy đi.');}
     cJ=cl(cJ+6);cH=cl(cH+1);return endWalkEvent(walkEvent.no);
   }
   if(walkEvent.kind==='item'&&take){const id=Math.random()<.5?'apple':'bread';inv[id]=(inv[id]||0)+1;return endWalkEvent(walkEvent.yes+' Bạn nhận được '+(id==='apple'?'Táo chín':'Bánh mì')+'.');}
@@ -527,16 +552,16 @@ function resolveWalkEvent(take){
     if(take){cH=cl(cH-1);return endWalkEvent(walkEvent.yes);}
     cJ=cl(cJ-5);health=Math.max(0,health-2);return endWalkEvent(walkEvent.no);
   }
-  if(walkEvent.kind==='money'&&take){const found=20+Math.floor(Math.random()*61);money+=found;return endWalkEvent(walkEvent.yes+' +'+found+'$.');}
+  if(walkEvent.kind==='money'&&take){const found=20+Math.floor(Math.random()*61);money+=found;achTrack('money');return endWalkEvent(walkEvent.yes+' +'+found+'$.');}
   if(walkEvent.kind==='merchant'&&take){
     if(money<25)return endWalkEvent('Bạn không đủ tiền. Thương gia lắc đầu rồi biến mất sau màn tuyết.');
-    money-=25;inv.fish=(inv.fish||0)+1;cF=cl(cF+10);cJ=cl(cJ+4);return endWalkEvent(walkEvent.yes+' Đã nhận Cá tươi.');
+    money-=25;inv.fish=(inv.fish||0)+1;achTrack('merchant');cF=cl(cF+10);cJ=cl(cJ+4);return endWalkEvent(walkEvent.yes+' Đã nhận Cá tươi.');
   }
   endWalkEvent(walkEvent.no||'Bạn tiếp tục chuyến đi.');
 }
 function finishWalk(){
   $('wEvent').hidden=true;walkWeather=null;$('weatherFx').className='';
-  const stamina=Math.min(hunger,cF),bonus=stamina>=60?12:stamina>=35?6:0;cJ=cl(cJ+bonus);money+=stamina>=60?20:8;walkActive=false;$('wStep').hidden=true;$('wGo').hidden=false;$('wGo').textContent='Đi lại';$('wHint').textContent=bonus?'Mèo vui vẻ hơn! +'+bonus+' niềm vui · +'+(stamina>=60?20:8)+'$':'Đã về nhà an toàn. Lần sau nhớ ăn no hơn nhé.';save();renderHud();walkStats();
+  const stamina=Math.min(hunger,cF),bonus=stamina>=60?12:stamina>=35?6:0;cJ=cl(cJ+bonus);achTrack('walks');money+=stamina>=60?20:8;walkActive=false;$('wStep').hidden=true;$('wGo').hidden=false;$('wGo').textContent='Đi lại';$('wHint').textContent=bonus?'Mèo vui vẻ hơn! +'+bonus+' niềm vui · +'+(stamina>=60?20:8)+'$':'Đã về nhà an toàn. Lần sau nhớ ăn no hơn nhé.';save();renderHud();walkStats();
 }
 $('walkBtn').onclick=openWalk;$('wGo').onclick=startWalk;$('wStep').onclick=nextWalk;$('wFinish').onclick=closeWalk;$('wEventA').onclick=()=>resolveWalkEvent(true);$('wEventB').onclick=()=>resolveWalkEvent(false);
 
@@ -548,7 +573,7 @@ const clk=$('clk'),p2=n=>String(n).padStart(2,'0');
 const JOBS=[{h:3,m:85,f:15,v:'lam1',s:'car'},{h:5,m:120,f:25,v:'lam2',s:'bar'},{h:4,m:150,f:45,v:'lam3',s:'sun'}];
 function renderHud(){const m=Math.floor(visiting?(360+(visiting.p.gt||0))%1440:clock());clk.textContent=p2(m/60|0)+':'+p2(m%60);
   $('hT').textContent=health+'/'+mxH();$('fT').textContent=hunger+'/'+mxF();
-  $('hC').style.width=Math.max(0,100-100*health/mxH())+'%';$('fC').style.width=Math.max(0,100-100*hunger/mxF())+'%';$('mT').textContent='MONEY: '+money;const wb=$('walkBtn');if(wb)wb.classList.toggle('show',!!(inv&&inv.leash>0)&&state==='game')}
+  $('hC').style.width=Math.max(0,100-100*health/mxH())+'%';$('fC').style.width=Math.max(0,100-100*hunger/mxF())+'%';$('mT').textContent='MONEY: '+money;const wb=$('walkBtn');if(wb)wb.classList.toggle('show',!!(inv&&inv.leash>0)&&state==='game');const ab=$('achBtn');if(ab)ab.classList.toggle('show',state==='game')}
 function doJob(j){$('wk').hidden=true;cover(()=>{
   state='work';$('game').classList.add('lock');money+=j.m;capM();hunger-=j.f;
   if(hunger<0){health=Math.max(0,health+hunger);hunger=0}
