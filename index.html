@@ -198,12 +198,25 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 .wStat{padding:.5cqw 1cqw;background:#2d2118dd;border:.2cqw solid #e0b050;white-space:nowrap}
 #wTrack{position:absolute;left:8%;right:8%;bottom:28%;height:13%;background:#2d2118cc;border:.4cqw solid #e0b050;box-shadow:0 .6cqw #160f0a;z-index:2;overflow:hidden}
 #wTrack i{display:block;width:0;height:100%;background:linear-gradient(90deg,#6e9b4b,#e0b050);transition:width .35s}
-#wCat{position:absolute;left:12%;bottom:29%;font-size:10cqw;filter:drop-shadow(.5cqw .7cqw #160f0a);z-index:3;transition:left .35s;image-rendering:pixelated}
+#wCat{position:absolute;left:12%;bottom:29%;font-size:10cqw;display:flex;align-items:center;justify-content:center;filter:drop-shadow(.5cqw .7cqw #160f0a);z-index:3;transition:left .35s;image-rendering:pixelated}#wCatBody{position:relative;z-index:1}#wCatOutfit{position:absolute;left:50%;top:-18%;z-index:2;font-size:3.2cqw;white-space:nowrap;transform:translateX(-50%);letter-spacing:-.35cqw}
 #wHint{position:absolute;left:8%;right:8%;bottom:20%;text-align:center;font-size:max(15px,2.8cqw);z-index:2;text-shadow:0 .25cqw #21150d}
+#weatherFx{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .35s}
+#weatherFx.rain{opacity:.72;background:repeating-linear-gradient(112deg,transparent 0 2.8cqw,#9bdcff88 2.8cqw 3.1cqw,transparent 3.1cqw 6.5cqw);background-size:8cqw 8cqw;animation:rainMove .45s linear infinite}
+#weatherFx.sun{opacity:.48;background:radial-gradient(circle at 84% 12%,#fff7a6cc 0 5%,#ffd35a55 10%,transparent 32%);animation:sunPulse 2.4s ease-in-out infinite}
+#weatherFx.snow{opacity:.9;background-image:radial-gradient(circle,#fff 0 .35cqw,transparent .45cqw),radial-gradient(circle,#fff8 0 .28cqw,transparent .4cqw),radial-gradient(circle,#fff 0 .22cqw,transparent .35cqw);background-size:8cqw 9cqw,13cqw 12cqw,17cqw 15cqw;animation:snowFall 4s linear infinite}
+@keyframes rainMove{from{background-position:0 0}to{background-position:-4cqw 8cqw}}
+@keyframes snowFall{from{background-position:0 -10cqw,3cqw -12cqw,8cqw -15cqw}to{background-position:4cqw 70cqw,8cqw 65cqw,2cqw 72cqw}}
+@keyframes sunPulse{50%{opacity:.7;transform:scale(1.04)}}
+#wWeatherBadge{padding:.5cqw 1cqw;background:#2d2118dd;border:.2cqw solid #e0b050;white-space:nowrap}
+#wEvent{position:absolute;left:18%;right:18%;top:27%;z-index:5;padding:2cqw 3cqw;background:#fbf1d5ee;border:.5cqw solid #8a5a2c;box-shadow:0 .7cqw #2b1f17;color:#4a2c14;text-align:center;font-size:max(14px,2.3cqw)}
+#wEvent h3{margin:0 0 .5cqw;color:#6e4524;font-size:max(18px,3.2cqw)}
+#wEvent p{margin:.5cqw 0 1.2cqw;line-height:1.15}
+#wEventActions{display:flex;justify-content:center;gap:1.2cqw;flex-wrap:wrap}
+#wEventActions .pb{font-size:max(14px,2.1cqw);padding:.6cqw 1.6cqw}
 #wActions{position:absolute;left:8%;right:8%;bottom:6%;display:flex;justify-content:center;gap:2cqw;z-index:2}
 #wActions .pb{font-size:max(16px,2.5cqw);padding:.8cqw 2.4cqw}
 #wFinish{background:#7a4e2e}
-#walkBtn{left:87.5%;top:34%;width:11.2%;height:15%;display:none;z-index:3;background:#7a5a36;color:#fff1c4;border:.35cqw solid #e6b85f;border-radius:1.2cqw;box-shadow:0 .5cqw #392314;line-height:1;font:700 2cqw 'Baloo 2',system-ui,sans-serif;text-shadow:0 .2cqw #392314}
+#walkBtn{left:70.5%;top:82%;width:12%;height:13%;display:none;z-index:3;background:#7a5a36;color:#fff1c4;border:.35cqw solid #e6b85f;border-radius:1.2cqw;box-shadow:0 .5cqw #392314;line-height:1;font:700 2cqw 'Baloo 2',system-ui,sans-serif;text-shadow:0 .2cqw #392314}
 #walkBtn.show{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.2cqw}
 #walkBtn b{font-size:4.2cqw;line-height:1}
 #game.walking .hit{pointer-events:none}
@@ -236,10 +249,11 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
   </div>
 
   <div id="walk" class="ui" hidden>
-    <video id="walkBg" muted loop playsinline></video><div id="walkShade"></div>
-    <div id="walkPanel"><div><div id="wTitle">ĐI DẠO</div><div id="wSub">Dắt mèo ra phố, giữ cả hai luôn no bụng</div></div><div id="wStats"><span class="wStat">Bạn: <b id="wHunger">100</b> 🍖</span><span class="wStat">Mèo: <b id="wCatFood">100</b> 🍖</span></div></div>
-    <div id="wTrack"><i id="wProgress"></i></div><div id="wCat" aria-hidden="true">🐈</div>
+    <video id="walkBg" muted loop playsinline></video><div id="walkShade"></div><div id="weatherFx"></div>
+    <div id="walkPanel"><div><div id="wTitle">ĐI DẠO</div><div id="wSub">Dắt mèo ra phố, giữ cả hai luôn no bụng</div></div><div id="wStats"><span class="wStat">Bạn: <b id="wHunger">100</b> 🍖</span><span class="wStat">Mèo: <b id="wCatFood">100</b> 🍖</span><span id="wWeatherBadge">☀️ Nắng dịu</span></div></div>
+    <div id="wTrack"><i id="wProgress"></i></div><div id="wCat" aria-hidden="true"><span id="wCatBody">🐈</span><span id="wCatOutfit"></span></div>
     <div id="wHint">Hãy bắt đầu chuyến đi khi cả bạn và mèo đều đủ no.</div>
+    <div id="wEvent" hidden><h3 id="wEventTitle"></h3><p id="wEventText"></p><div id="wEventActions"><button class="pb" id="wEventA"></button><button class="pb" id="wEventB"></button></div></div>
     <div id="wActions"><button class="pb" id="wGo">Bắt đầu</button><button class="pb" id="wStep" hidden>Đi tiếp</button><button class="pb" id="wFinish">Về nhà</button></div>
   </div>
   <div id="day" class="ui" hidden>
@@ -449,34 +463,82 @@ $('cal').onclick=()=>cover(()=>{state='day';$('game').hidden=true;$('day').hidde
 $('exit').onclick=()=>cover(goMain);
 
 // ---- Đi dạo: mở khi sở hữu dây xích mèo; tiêu hao độ no của cả hai
-let walkStep=0,walkActive=false;
+let walkStep=0,walkActive=false,walkEvent=null,walkWeather=null;
+function renderWalkCat(){const e=st.eq||'';const a=[];if(e.includes('h'))a.push('😇');if(e.includes('c'))a.push('🧥');if(e.includes('r'))a.push('🔴');else if(e.includes('b'))a.push('🔵');$('wCatOutfit').textContent=a.join(' ');}
 function walkStats(){
-  $('wHunger').textContent=Math.round(hunger);$('wCatFood').textContent=Math.round(cF);
+  renderWalkCat();$('wHunger').textContent=Math.round(hunger);$('wCatFood').textContent=Math.round(cF);
   $('wProgress').style.width=(walkStep/3*100)+'%';$('wCat').style.left=(12+walkStep*24)+'%';
 }
-function closeWalk(){walkActive=false;const wb=$('walkBg');wb.pause();$('walk').hidden=true;state='game';$('game').classList.remove('walking');$('game').hidden=false;renderHud();lastSong=pick(G,lastSong);song(lastSong,false)}
+function closeWalk(){walkActive=false;walkEvent=null;walkWeather=null;$('weatherFx').className='';$('wEvent').hidden=true;const wb=$('walkBg');wb.pause();$('walk').hidden=true;state='game';$('game').classList.remove('walking');$('game').hidden=false;renderHud();lastSong=pick(G,lastSong);song(lastSong,false)}
 function openWalk(){
   if(!inv.leash)return toast('Cần có Dây xích mèo để đi dạo');
-  cover(()=>{state='walk';walkActive=false;walkStep=0;hideAll();$('walk').hidden=false;$('game').classList.add('walking');
-    const scene=pick(DAY,lastScene);$('walkBg').src=vid(scene);play($('walkBg'));$('wGo').hidden=false;$('wStep').hidden=true;walkStats();$('wHint').textContent='Hãy bắt đầu chuyến đi khi cả bạn và mèo đều đủ no.';
+  cover(()=>{state='walk';walkActive=false;walkEvent=null;walkStep=0;hideAll();$('walk').hidden=false;$('game').classList.add('walking');
+    const scene=pick(DAY,lastScene);$('walkBg').src=vid(scene);play($('walkBg'));setWalkWeather();$('wGo').hidden=false;$('wStep').hidden=true;walkStats();$('wHint').textContent='Hãy bắt đầu chuyến đi khi cả bạn và mèo đều đủ no.';
   });
 }
 function startWalk(){
   const low=Math.min(hunger,cF);
   if(low<35)return $('wHint').textContent='Cả hai cần ít nhất 35 độ no để đi dạo. Hãy ăn trước nhé!';
-  walkActive=true;walkStep=0;hunger=Math.max(0,hunger-4);cF=Math.max(0,cF-5);$('wGo').hidden=true;$('wStep').hidden=false;$('wHint').textContent='Chuyến đi bắt đầu! Chạm “Đi tiếp” để khám phá.';walkStats();renderHud();
+  walkActive=true;walkEvent=null;walkStep=0;$('wEvent').hidden=true;hunger=Math.max(0,hunger-4);cF=Math.max(0,cF-5);$('wGo').hidden=true;$('wStep').hidden=false;$('wHint').textContent='Chuyến đi bắt đầu! Chạm “Đi tiếp” để khám phá.';walkStats();renderHud();
 }
 function nextWalk(){
   if(!walkActive)return startWalk();
   if(walkStep>=3)return finishWalk();
-  walkStep++;hunger=Math.max(0,hunger-6);cF=Math.max(0,cF-7);health=Math.max(0,health-(hunger<20?1:0));
-  const stamina=Math.min(hunger,cF);$('wHint').textContent=stamina<35?'Hai bạn bắt đầu mệt, nên về nhà sớm.':walkStep<3?'Một góc phố mới! Mèo đang rất thích thú.':'Đã đến công viên — chuyến đi hoàn thành!';walkStats();renderHud();
+  walkStep++;maybeChangeWeather();hunger=Math.max(0,hunger-6);cF=Math.max(0,cF-7);health=Math.max(0,health-(hunger<20?1:0));applyWalkWeather();
+  const stamina=Math.min(hunger,cF);$('wHint').textContent=walkWeather?walkWeather.hint:(stamina<35?'Hai bạn bắt đầu mệt, nên về nhà sớm.':walkStep<3?'Một góc phố mới! Mèo đang rất thích thú.':'Đã đến công viên — chuyến đi hoàn thành!');walkStats();renderHud();
   if(walkStep>=3)$('wStep').textContent='Nhận thưởng';
+  if(Math.random()<.55)showWalkEvent();
+}
+const WALK_WEATHER=[
+  {id:'rain',icon:'🌧️',name:'Mưa rào',hint:'Mưa rơi bất chợt! Mèo bị ướt và nhanh mệt hơn.',catF:-5,catH:-2,catJ:-3,personF:-2},
+  {id:'sun',icon:'☀️',name:'Nắng gắt',hint:'Nắng gắt làm mèo khát và khó chịu.',catF:-9,catH:-3,catJ:-2,personF:-7},
+  {id:'snow',icon:'❄️',name:'Tuyết rơi',hint:'Tuyết phủ trắng lối đi. Mèo thích thú nhưng bị lạnh.',catF:-7,catH:-5,catJ:2,personF:-4}
+];
+function setWalkWeather(w){
+  walkWeather=w||WALK_WEATHER[Math.random()*WALK_WEATHER.length|0];const fx=$('weatherFx');fx.className=walkWeather.id;$('wWeatherBadge').textContent=walkWeather.icon+' '+walkWeather.name;
+}
+function applyWalkWeather(){
+  if(!walkWeather)return;const w=walkWeather;hunger=Math.max(0,hunger+w.personF);cF=Math.max(0,cF+w.catF);cH=cl(cH+w.catH);cJ=cl(cJ+w.catJ);$('wHint').textContent=w.hint;walkStats();renderHud();
+}
+function maybeChangeWeather(){if(Math.random()<.3){setWalkWeather();$('wHint').textContent='Thời tiết thay đổi: '+walkWeather.icon+' '+walkWeather.name+'.';}}
+const WALK_EVENTS=[
+  {kind:'stray',title:'MỘT CHÚ MÈO HOANG',text:'Một chú mèo con ló ra sau bụi cây, trông có vẻ đói và sợ hãi.',a:'Nói chuyện',b:'Chơi đùa',yes:'Chú mèo hoang khẽ đáp: “Meo... bạn có muốn làm bạn không?”',no:'Bạn chơi đùa cùng mèo hoang. Cả hai chú mèo cùng chạy vòng quanh bụi cây!',phase:0},
+  {kind:'item',title:'ÁNH LẤP LÁNH BÊN VỈA HÈ',text:'Bạn nhìn thấy một món đồ còn dùng được nằm cạnh chiếc ghế đá.',a:'Nhặt lên',b:'Để lại',yes:'Bạn nhặt được một món đồ hữu ích!',no:'Bạn để món đồ lại đúng chỗ và tiếp tục chuyến đi.'},
+  {kind:'dog',title:'CẨN THẬN! CHÓ DỮ',text:'Một chú chó dữ đang sủa ở phía trước. Mèo của bạn dựng tai lên đầy cảnh giác.',a:'Né sang bên',b:'Đánh lạc hướng',yes:'Bạn bình tĩnh né qua con hẻm nhỏ, bảo vệ được mèo an toàn.',no:'Bạn ném một cành cây sang hướng khác. Chú chó chạy theo, nhưng mèo bị hoảng một chút.'},
+  {kind:'money',title:'MỘT VÍ TIỀN BÊN GHẾ ĐÁ',text:'Một chiếc ví nhỏ nằm trên vỉa hè. Bên trong có vài tờ tiền.',a:'Nhặt tiền',b:'Bỏ qua',yes:'Bạn nhặt được tiền và quyết định dùng nó cho chuyến đi.',no:'Bạn bỏ qua chiếc ví và tiếp tục đi dạo.'},
+  {kind:'merchant',title:'THƯƠNG GIA BÍ ẨN',text:'Một người bán hàng đội mũ rộng vành xuất hiện: “Mua cá khô may mắn không? Chỉ 25$ thôi.”',a:'Mua cá khô · 25$',b:'Từ chối',yes:'Mèo của bạn rất thích món cá khô đặc biệt!',no:'Thương gia bí ẩn mỉm cười rồi biến mất sau màn tuyết.'}
+];
+function showWalkEvent(){
+  walkEvent={...WALK_EVENTS[Math.random()*WALK_EVENTS.length|0]};$('wEventTitle').textContent=walkEvent.title;$('wEventText').textContent=walkEvent.text;$('wEventA').textContent=walkEvent.a;$('wEventB').textContent=walkEvent.b;$('wEvent').hidden=false;$('wStep').hidden=true;
+}
+function endWalkEvent(message){$('wEvent').hidden=true;walkEvent=null;$('wHint').textContent=message;walkStats();renderHud();save();$('wStep').hidden=false;}
+function resolveWalkEvent(take){
+  if(!walkEvent)return;
+  if(walkEvent.kind==='stray'&&walkEvent.phase===0){
+    if(take){walkEvent.phase=1;$('wEventTitle').textContent='MÈO HOANG: MỘT CUỘC LÀM QUEN';$('wEventText').textContent=walkEvent.yes;$('wEventA').textContent='Cho mèo ăn';$('wEventB').textContent='Vỗ về';return;}
+    return endWalkEvent('Bạn và mèo tiếp tục bước đi, nhưng vẫn ngoái lại nhìn mèo hoang.');
+  }
+  if(walkEvent.kind==='stray'){
+    if(take){cF=Math.max(0,cF-3);cJ=cl(cJ+10);return endWalkEvent('Bạn chia sẻ một ít thức ăn. Mèo hoang vui vẻ cọ vào chân bạn rồi chạy đi.');}
+    cJ=cl(cJ+6);cH=cl(cH+1);return endWalkEvent(walkEvent.no);
+  }
+  if(walkEvent.kind==='item'&&take){const id=Math.random()<.5?'apple':'bread';inv[id]=(inv[id]||0)+1;return endWalkEvent(walkEvent.yes+' Bạn nhận được '+(id==='apple'?'Táo chín':'Bánh mì')+'.');}
+  if(walkEvent.kind==='dog'){
+    if(take){cH=cl(cH-1);return endWalkEvent(walkEvent.yes);}
+    cJ=cl(cJ-5);health=Math.max(0,health-2);return endWalkEvent(walkEvent.no);
+  }
+  if(walkEvent.kind==='money'&&take){const found=20+Math.floor(Math.random()*61);money+=found;return endWalkEvent(walkEvent.yes+' +'+found+'$.');}
+  if(walkEvent.kind==='merchant'&&take){
+    if(money<25)return endWalkEvent('Bạn không đủ tiền. Thương gia lắc đầu rồi biến mất sau màn tuyết.');
+    money-=25;inv.fish=(inv.fish||0)+1;cF=cl(cF+10);cJ=cl(cJ+4);return endWalkEvent(walkEvent.yes+' Đã nhận Cá tươi.');
+  }
+  endWalkEvent(walkEvent.no||'Bạn tiếp tục chuyến đi.');
 }
 function finishWalk(){
+  $('wEvent').hidden=true;walkWeather=null;$('weatherFx').className='';
   const stamina=Math.min(hunger,cF),bonus=stamina>=60?12:stamina>=35?6:0;cJ=cl(cJ+bonus);money+=stamina>=60?20:8;walkActive=false;$('wStep').hidden=true;$('wGo').hidden=false;$('wGo').textContent='Đi lại';$('wHint').textContent=bonus?'Mèo vui vẻ hơn! +'+bonus+' niềm vui · +'+(stamina>=60?20:8)+'$':'Đã về nhà an toàn. Lần sau nhớ ăn no hơn nhé.';save();renderHud();walkStats();
 }
-$('walkBtn').onclick=openWalk;$('wGo').onclick=startWalk;$('wStep').onclick=nextWalk;$('wFinish').onclick=closeWalk;
+$('walkBtn').onclick=openWalk;$('wGo').onclick=startWalk;$('wStep').onclick=nextWalk;$('wFinish').onclick=closeWalk;$('wEventA').onclick=()=>resolveWalkEvent(true);$('wEventB').onclick=()=>resolveWalkEvent(false);
 
 $('hud').src='data:image/png;base64,'+A.hud;
 $('dbg').src=$('dpic').src='data:image/jpeg;base64,'+A.day;
