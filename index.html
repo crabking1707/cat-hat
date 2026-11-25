@@ -30,7 +30,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 .pnl input{font:inherit;font-size:max(16px,2.4cqw);padding:.9cqw 1.2cqw;border:.4cqw solid #8a9a5b;background:#fff;color:#3a2420;border-radius:0;outline:none;width:100%;box-sizing:border-box}
 .pnl input:focus{border-color:#3a2420}
 .err{min-height:1.2em;margin:0;color:#b3261e;font-size:max(13px,1.9cqw)}
-#day{background:#2b3a22;pointer-events:auto;overflow:hidden}
+#day{background:#29352b;pointer-events:auto;overflow:hidden}
 #dbg{inset:0;width:100%;height:100%;object-fit:cover;filter:blur(16px) brightness(.7)}
 #dbox{left:50%;top:0;height:100%;aspect-ratio:1;transform:translateX(-50%);container-type:inline-size;font-family:'Baloo 2',system-ui,sans-serif;font-weight:700;color:#3a2420}
 #dbox>*{position:absolute}
@@ -135,7 +135,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 .lk2{background:none;border:0;padding:0;font:inherit;font-size:1.9cqw;color:#5b6a2e;text-decoration:underline;cursor:pointer}
 .cf{text-align:center;font-size:2.6cqw;padding:4cqw}.cf .pb{margin:1.5cqw}
 #fBody.chat{overflow:hidden;display:flex;flex-direction:column;padding:0}
-.msgs{flex:1;min-height:0;overflow-y:auto;padding:1.4cqw;display:flex;flex-direction:column;gap:.9cqw;background:#e4efd4}
+.msgs{flex:1;min-height:0;overflow-y:auto;padding:1.4cqw;display:flex;flex-direction:column;gap:.9cqw;background:#e8e2c9}
 .m{align-self:flex-start;max-width:72%;padding:.9cqw 1.5cqw;border-radius:1.8cqw;background:#fff;font-size:2.1cqw;word-break:break-word}.m.me{align-self:flex-end;background:#6fa84a;color:#fff}
 .m img{max-width:100%;border-radius:1cqw;display:block}.m audio{max-width:100%;height:5cqw}.m a{color:inherit}
 .cbar{flex:none;display:flex;gap:1cqw;align-items:center;padding:1cqw;background:#f4ead0;border-top:.3cqw solid #cdb78a}
@@ -152,7 +152,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 .sbtn:active{transform:translateY(.4cqw)}
 #fBody{touch-action:auto;overscroll-behavior:auto;-webkit-overflow-scrolling:touch}
 #fBody.chat{display:grid;grid-template-rows:minmax(0,1fr) auto;overflow:hidden;padding:0}
-.msgs{display:block;overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:auto;min-height:0;padding:1.4cqw;background:#e4efd4}
+.msgs{display:block;overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:auto;min-height:0;padding:1.4cqw;background:#e8e2c9}
 .m{display:block;width:fit-content;margin:0 0 .9cqw}.m.me{margin-left:auto}
 .msgs>.lk2{display:block;margin:0 auto 1cqw}
 .cb>#cCol{inset:auto;pointer-events:none;image-rendering:pixelated}
@@ -186,6 +186,27 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
 #iT{position:absolute;left:17.5%;top:61%;width:65%;height:26%;display:flex;align-items:center;box-sizing:border-box;padding:0 1cqw;font:700 3.1cqw/1.3 'Baloo 2',system-ui,sans-serif;color:#fff;text-shadow:0 .2cqw .3cqw #000;pointer-events:none}
 #iN{position:absolute;right:17.5%;top:83.5%;color:#ffd98a;font-size:2.2cqw;animation:blk 1s steps(2) infinite;pointer-events:none}
 @keyframes blk{50%{opacity:0}}
+
+/* Đi dạo: màn chơi pixel độc lập, dùng lại video Base64 có sẵn */
+#walk{inset:0;z-index:5;background:#18251f;overflow:hidden;color:#fff5d6;font-family:'Baloo 2',system-ui,sans-serif;pointer-events:auto}
+#walkBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.82) brightness(.72)}
+#walkShade{position:absolute;inset:0;background:linear-gradient(180deg,#102016aa 0%,transparent 42%,#0d1710c7 100%);pointer-events:none}
+#walkPanel{position:absolute;left:5%;right:5%;top:4%;display:flex;justify-content:space-between;align-items:flex-start;gap:2cqw;z-index:2;text-shadow:0 .2cqw #21150d}
+#wTitle{font-size:max(20px,4.5cqw);line-height:1;color:#ffe19a}
+#wSub{font-size:max(13px,2cqw);color:#fff5d6}
+#wStats{display:flex;gap:1cqw;flex-wrap:wrap;justify-content:flex-end;font-size:max(13px,2cqw)}
+.wStat{padding:.5cqw 1cqw;background:#2d2118dd;border:.2cqw solid #e0b050;white-space:nowrap}
+#wTrack{position:absolute;left:8%;right:8%;bottom:28%;height:13%;background:#2d2118cc;border:.4cqw solid #e0b050;box-shadow:0 .6cqw #160f0a;z-index:2;overflow:hidden}
+#wTrack i{display:block;width:0;height:100%;background:linear-gradient(90deg,#6e9b4b,#e0b050);transition:width .35s}
+#wCat{position:absolute;left:12%;bottom:29%;font-size:10cqw;filter:drop-shadow(.5cqw .7cqw #160f0a);z-index:3;transition:left .35s;image-rendering:pixelated}
+#wHint{position:absolute;left:8%;right:8%;bottom:20%;text-align:center;font-size:max(15px,2.8cqw);z-index:2;text-shadow:0 .25cqw #21150d}
+#wActions{position:absolute;left:8%;right:8%;bottom:6%;display:flex;justify-content:center;gap:2cqw;z-index:2}
+#wActions .pb{font-size:max(16px,2.5cqw);padding:.8cqw 2.4cqw}
+#wFinish{background:#7a4e2e}
+#walkBtn{left:87.5%;top:34%;width:11.2%;height:15%;display:none;z-index:3;background:#7a5a36;color:#fff1c4;border:.35cqw solid #e6b85f;border-radius:1.2cqw;box-shadow:0 .5cqw #392314;line-height:1;font:700 2cqw 'Baloo 2',system-ui,sans-serif;text-shadow:0 .2cqw #392314}
+#walkBtn.show{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.2cqw}
+#walkBtn b{font-size:4.2cqw;line-height:1}
+#game.walking .hit{pointer-events:none}
 </style></head><body>
 <div id="app"><div id="stage">
   <video id="v" muted loop playsinline autoplay></video>
@@ -207,10 +228,19 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <button class="hit" id="catHit" aria-label="Mèo"></button>
     <button class="hit" id="sleep" aria-label="Ngủ" style="left:79.3%;top:82%;width:7.7%;height:13.7%"></button>
     <button class="hit" id="bagBtn" aria-label="Túi đồ" style="left:1%;top:72.3%;width:6.6%;height:12.9%"></button>
+    <button class="hit" id="walkBtn" aria-label="Đi dạo"><b>🐈</b><span>Đi dạo</span></button>
     <button class="hit" id="avatar" aria-label="Bạn bè" style="left:1.2%;top:21.5%;width:6.8%;height:11.2%"></button>
     
     <img id="hAv" alt="" hidden><button class="pb" id="back">Trở về</button><div id="vBan"></div>
     <button class="hit" id="shop" aria-label="Cửa hàng" style="left:86.8%;top:75.5%;width:11.6%;height:20%"></button>
+  </div>
+
+  <div id="walk" class="ui" hidden>
+    <video id="walkBg" muted loop playsinline></video><div id="walkShade"></div>
+    <div id="walkPanel"><div><div id="wTitle">ĐI DẠO</div><div id="wSub">Dắt mèo ra phố, giữ cả hai luôn no bụng</div></div><div id="wStats"><span class="wStat">Bạn: <b id="wHunger">100</b> 🍖</span><span class="wStat">Mèo: <b id="wCatFood">100</b> 🍖</span></div></div>
+    <div id="wTrack"><i id="wProgress"></i></div><div id="wCat" aria-hidden="true">🐈</div>
+    <div id="wHint">Hãy bắt đầu chuyến đi khi cả bạn và mèo đều đủ no.</div>
+    <div id="wActions"><button class="pb" id="wGo">Bắt đầu</button><button class="pb" id="wStep" hidden>Đi tiếp</button><button class="pb" id="wFinish">Về nhà</button></div>
   </div>
   <div id="day" class="ui" hidden>
     <img id="dbg" alt="">
@@ -243,7 +273,7 @@ video{inset:0;width:100%;height:100%;object-fit:cover}
     <button class="pb xb" id="cX" aria-label="Đóng" style="left:94.5%;top:2.4%;width:4%;height:7%">✕</button>
     <img class="bb" id="bbA" alt="" hidden><img class="bb" id="bbB" alt="" hidden>
   </div></div>
-  <div id="shp" class="ui" hidden style="background:#4d7a45"><div class="cb"><img id="simg" alt="">
+  <div id="shp" class="ui" hidden style="background:#d7c49a"><div class="cb"><img id="simg" alt="">
     <div id="sDisc" hidden>Chủ nhật · Đồ ăn giảm 10%</div>
     <div id="sMoney" style="left:60.8%;top:8.2%;width:8.6%;height:5.2%"></div>
     <button class="pb xb" id="sX" aria-label="Thoát shop" style="left:89.1%;top:7.8%;width:3.9%;height:6.5%">✕</button>
@@ -358,8 +388,8 @@ function applyVol(){const x=vm*vs;gn?gn.gain.value=x:au.volume=x;$('vM').textCon
   try{localStorage.setItem('cathat_vol',JSON.stringify({m:vm,s:vs}))}catch(e){}}
 $('rM').oninput=e=>{vm=+e.target.value;applyVol()};$('rS').oninput=e=>{vs=+e.target.value;applyVol()};applyVol();
 // ---- Cài đặt / creator
-const inG=()=>['game','day','work','cat','shp'].includes(state)||(['set','cre'].includes(state)&&from==='game');
-const hideAll=()=>['menu','game','day','set','cre','cat','shp','bag','slp'].forEach(i=>$(i).hidden=true);
+const inG=()=>['game','day','walk','work','cat','shp'].includes(state)||(['set','cre'].includes(state)&&from==='game');
+const hideAll=()=>['menu','game','day','walk','set','cre','cat','shp','bag','slp'].forEach(i=>$(i).hidden=true);
 const openSet=f=>cover(()=>{from=f;state='set';hideAll();$('set').hidden=false});
 function toMenu(){save();state='menu';hideAll();$('menu').hidden=false;show('menu');song('mus_menu',true)}
 $('mset').onclick=()=>openSet('menu');$('gear').onclick=()=>openSet('game');
@@ -417,6 +447,37 @@ function renderDay(){
 const goMain=()=>{state='game';$('game').classList.remove('lock');$('day').hidden=true;$('game').hidden=false;toMain()};
 $('cal').onclick=()=>cover(()=>{state='day';$('game').hidden=true;$('day').hidden=false;v.pause();renderDay()});
 $('exit').onclick=()=>cover(goMain);
+
+// ---- Đi dạo: mở khi sở hữu dây xích mèo; tiêu hao độ no của cả hai
+let walkStep=0,walkActive=false;
+function walkStats(){
+  $('wHunger').textContent=Math.round(hunger);$('wCatFood').textContent=Math.round(cF);
+  $('wProgress').style.width=(walkStep/3*100)+'%';$('wCat').style.left=(12+walkStep*24)+'%';
+}
+function closeWalk(){walkActive=false;const wb=$('walkBg');wb.pause();$('walk').hidden=true;state='game';$('game').classList.remove('walking');$('game').hidden=false;renderHud();lastSong=pick(G,lastSong);song(lastSong,false)}
+function openWalk(){
+  if(!inv.leash)return toast('Cần có Dây xích mèo để đi dạo');
+  cover(()=>{state='walk';walkActive=false;walkStep=0;hideAll();$('walk').hidden=false;$('game').classList.add('walking');
+    const scene=pick(DAY,lastScene);$('walkBg').src=vid(scene);play($('walkBg'));$('wGo').hidden=false;$('wStep').hidden=true;walkStats();$('wHint').textContent='Hãy bắt đầu chuyến đi khi cả bạn và mèo đều đủ no.';
+  });
+}
+function startWalk(){
+  const low=Math.min(hunger,cF);
+  if(low<35)return $('wHint').textContent='Cả hai cần ít nhất 35 độ no để đi dạo. Hãy ăn trước nhé!';
+  walkActive=true;walkStep=0;hunger=Math.max(0,hunger-4);cF=Math.max(0,cF-5);$('wGo').hidden=true;$('wStep').hidden=false;$('wHint').textContent='Chuyến đi bắt đầu! Chạm “Đi tiếp” để khám phá.';walkStats();renderHud();
+}
+function nextWalk(){
+  if(!walkActive)return startWalk();
+  if(walkStep>=3)return finishWalk();
+  walkStep++;hunger=Math.max(0,hunger-6);cF=Math.max(0,cF-7);health=Math.max(0,health-(hunger<20?1:0));
+  const stamina=Math.min(hunger,cF);$('wHint').textContent=stamina<35?'Hai bạn bắt đầu mệt, nên về nhà sớm.':walkStep<3?'Một góc phố mới! Mèo đang rất thích thú.':'Đã đến công viên — chuyến đi hoàn thành!';walkStats();renderHud();
+  if(walkStep>=3)$('wStep').textContent='Nhận thưởng';
+}
+function finishWalk(){
+  const stamina=Math.min(hunger,cF),bonus=stamina>=60?12:stamina>=35?6:0;cJ=cl(cJ+bonus);money+=stamina>=60?20:8;walkActive=false;$('wStep').hidden=true;$('wGo').hidden=false;$('wGo').textContent='Đi lại';$('wHint').textContent=bonus?'Mèo vui vẻ hơn! +'+bonus+' niềm vui · +'+(stamina>=60?20:8)+'$':'Đã về nhà an toàn. Lần sau nhớ ăn no hơn nhé.';save();renderHud();walkStats();
+}
+$('walkBtn').onclick=openWalk;$('wGo').onclick=startWalk;$('wStep').onclick=nextWalk;$('wFinish').onclick=closeWalk;
+
 $('hud').src='data:image/png;base64,'+A.hud;
 $('dbg').src=$('dpic').src='data:image/jpeg;base64,'+A.day;
 tr.src=vid('trans');
@@ -425,7 +486,7 @@ const clk=$('clk'),p2=n=>String(n).padStart(2,'0');
 const JOBS=[{h:3,m:85,f:15,v:'lam1',s:'car'},{h:5,m:120,f:25,v:'lam2',s:'bar'},{h:4,m:150,f:45,v:'lam3',s:'sun'}];
 function renderHud(){const m=Math.floor(visiting?(360+(visiting.p.gt||0))%1440:clock());clk.textContent=p2(m/60|0)+':'+p2(m%60);
   $('hT').textContent=health+'/'+mxH();$('fT').textContent=hunger+'/'+mxF();
-  $('hC').style.width=Math.max(0,100-100*health/mxH())+'%';$('fC').style.width=Math.max(0,100-100*hunger/mxF())+'%';$('mT').textContent='MONEY: '+money}
+  $('hC').style.width=Math.max(0,100-100*health/mxH())+'%';$('fC').style.width=Math.max(0,100-100*hunger/mxF())+'%';$('mT').textContent='MONEY: '+money;const wb=$('walkBtn');if(wb)wb.classList.toggle('show',!!(inv&&inv.leash>0)&&state==='game')}
 function doJob(j){$('wk').hidden=true;cover(()=>{
   state='work';$('game').classList.add('lock');money+=j.m;capM();hunger-=j.f;
   if(hunger<0){health=Math.max(0,health+hunger);hunger=0}
@@ -461,7 +522,7 @@ const ITEMS=[
  {id:'yarn',n:'Bóng len',p:75,t:['cat','toy','item'],tag:'Cho mèo · Đồ chơi',img:'i_yarn',d:'Lăn đi lăn lại cả ngày, mèo chơi mãi không chán.',e:['+12 niềm vui, +2 sức khoẻ trong 1 ngày','Dùng 1 lần mỗi ngày, hồi lại lúc 00:00']},
  {id:'prem',n:'Thức ăn mèo cao cấp',p:25,t:['cat','food'],tag:'Cho mèo · Đồ ăn',img:'i_prem',d:'Hạt cao cấp thơm ngon, bé mèo ăn là liếm sạch bát.',e:['+8 độ no','+3 sức khoẻ','+2 niềm vui']},
  {id:'dumb',n:'Tạ nhẹ',p:120,t:['item'],tag:'Cho người · Vật phẩm',img:'i_dumb',d:'Tập đều mỗi ngày, cơ thể ngày một dẻo dai hơn.',e:['+5 giới hạn độ no','+2 giới hạn sức khoẻ','Độ bền 3 lần dùng','Tối đa 2 lần mỗi ngày trong game','Chỉ sở hữu 1 cái'],one:1},
- {id:'leash',n:'Dây xích mèo',p:1000,t:['cat','item'],tag:'Cho mèo · Vật phẩm',img:'i_leash',d:'Đưa mèo cưng ra phố ngắm nắng, tha hồ khám phá!',e:['Vật phẩm vĩnh viễn','Mở khoá tính năng "đi dạo" (sắp có)','Chỉ sở hữu 1 cái'],one:1},
+ {id:'leash',n:'Dây xích mèo',p:1000,t:['cat','item'],tag:'Cho mèo · Vật phẩm',img:'i_leash',d:'Đưa mèo cưng ra phố ngắm nắng, tha hồ khám phá!',e:['Vật phẩm vĩnh viễn','Mở khoá tính năng đi dạo','Chỉ sở hữu 1 cái'],one:1},
  {id:'red',n:'Vòng cổ đỏ',p:200,t:['cat','cos'],tag:'Cho mèo · Trang phục',img:'i_red',eqk:'r',d:'Vòng đỏ chấm bi cùng chiếc chuông leng keng, mèo diện lên là nổi bật liền.',e:['Vật phẩm vĩnh viễn','Đổi diện mạo mèo sang vòng cổ đỏ','Bấm Sử dụng để đeo, Tháo ra để bỏ'],one:1},
  {id:'blue',n:'Vòng cổ xanh',p:200,t:['cat','cos'],tag:'Cho mèo · Trang phục',img:'i_blue',eqk:'b',d:'Vòng xanh dịu mát kèm chuông nhỏ, đeo vào trông mèo thật lịch sự.',e:['Vật phẩm vĩnh viễn','Đổi diện mạo mèo sang vòng cổ xanh','Bấm Sử dụng để đeo, Tháo ra để bỏ'],one:1},
  {id:'cape',n:'Áo choàng ma cà rồng',p:250,t:['cat','cos'],tag:'Cho mèo · Trang phục',img:'i_cape',eqk:'c',d:'Tấm áo choàng đen viền vàng, khoác lên là mèo thành quý tộc bóng đêm.',e:['Vật phẩm vĩnh viễn','Mặc được cùng vòng cổ và vòng thiên thần','Bấm Sử dụng để mặc, Tháo ra để bỏ'],one:1},
